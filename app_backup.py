@@ -1,7 +1,7 @@
 """
 ATS Resume Analyzer - Main Application
 Streamlit-based tool for analyzing resume-job match scores
-WITH USER AUTHENTICATION AND ADMIN DASHBOARD
+this is without dashboard and authentication, just the core analysis functionality
 """
 
 import streamlit as st
@@ -20,21 +20,18 @@ from section_analyzer import analyze_sections
 from visualization import create_section_impact_chart
 
 from s3_utils import upload_pdf
-from database import init_db, save_resume, is_uploads_enabled
 
-# Authentication and admin
-from auth import init_session_state, render_login_page, logout
-from admin_dashboard import render_admin_dashboard, render_admin_stats_widget
-
-# Initialize
+from database import init_db, save_resume
 init_db()
+
+
+# Setup NLTK
 setup_nltk()
-init_session_state()
 
 # Page configuration
 st.set_page_config(
     page_title="ATS Resume Analyzer",
-    page_icon="🎯",
+    page_icon="𖤓",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -42,41 +39,15 @@ st.set_page_config(
 # Apply custom CSS
 apply_custom_css()
 
+# Render header
+render_header()
+
+# Render sidebar
+render_sidebar()
+
 
 def main():
     """Main application logic"""
-    
-    # Check authentication
-    if not st.session_state.get('authenticated', False):
-        render_login_page()
-        return
-    
-    # Show admin dashboard if admin
-    if st.session_state.get('is_admin', False):
-        render_admin_dashboard()
-        return
-    
-    # Regular user interface
-    render_header()
-    render_sidebar()
-    
-    # Add logout button in sidebar
-    with st.sidebar:
-        st.markdown("---")
-        st.markdown(f"**Logged in as:** {st.session_state.user_email}")
-        if st.button("🚪 Logout", use_container_width=True):
-            logout()
-    
-    # Check if uploads are enabled
-    uploads_enabled = is_uploads_enabled()
-    
-    if not uploads_enabled:
-        st.error(
-            "⚠️ **PDF Uploads Currently Disabled**\n\n"
-            "The administrator has temporarily disabled PDF uploads to AWS S3. "
-            "Please try again later or contact support."
-        )
-        st.stop()
     
     # Input section
     col1, col2 = st.columns([1, 1], gap="large")
@@ -123,7 +94,7 @@ def main():
     elif not_willing_to_relocate and not willing_to_relocate:
         relocation_preference = False
     else:
-        relocation_preference = None
+        relocation_preference = None  # User hasn't specified or contradictory input
     
     st.markdown("<br>", unsafe_allow_html=True)
     
@@ -146,44 +117,33 @@ def main():
             try:
                 uploaded_file.seek(0)
                 resume_text = extract_text_from_pdf(uploaded_file)
+
             except Exception as e:
                 st.error(f"❌ Error reading PDF: {str(e)}")
                 return
             
             if not resume_text:
                 st.error("❌ Could not extract text from PDF. Please try another file.")
-                return
+                return 
             
-            # Analyze sections
+            # Analyze sections (with relocation preference)
             sections = analyze_sections(resume_text, job_description, relocation_preference)
             
-            # Calculate similarity
-            similarity_score, resume_processed, job_processed = calculate_similarity(
-                resume_text, job_description, sections
-            )
+            # Calculate similarity (pass sections for section score calculation)
+            similarity_score, resume_processed, job_processed = calculate_similarity(resume_text, job_description, sections)
             
             # Calculate expected score
             expected_score, potential_gain = calculate_expected_score(similarity_score, sections)
-            
-            # Upload to S3 (only if enabled)
-            uploaded_url = None
-            if uploads_enabled:
-                try:
-                    uploaded_file.seek(0)
-                    uploaded_url = upload_pdf(uploaded_file)
-                    
-                    # Save to database
-                    save_resume(
-                        uploaded_file.name,
-                        uploaded_url,
-                        similarity_score,
-                        expected_score,
-                        st.session_state.user_email
-                    )
-                    
-                    st.success("✅ Resume uploaded and saved!")
-                except Exception as e:
-                    st.warning(f"⚠️ Upload error: {str(e)}")
+
+            # Reset file pointer before uploading
+            uploaded_file.seek(0)
+
+            # Upload to S3
+            uploaded_url = upload_pdf(uploaded_file)
+
+            # Save metadata
+            save_resume(uploaded_file.name, uploaded_url, similarity_score)
+
             
             # Display info message
             st.info(
@@ -194,24 +154,19 @@ def main():
             # Results display
             st.markdown("---")
             
-            # Auto-scroll to results
+            # Auto-scroll to results with smooth animation
             components.html("""
                 <script>
-                    setTimeout(function() {
-                        const mainSection = window.parent.document.querySelector('section.main');
-                        if (mainSection) {
-                            mainSection.scrollBy({
-                                top: 600,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }, 100);
+                    window.parent.document.querySelector('section.main').scrollTo({
+                        top: window.parent.document.querySelector('section.main').scrollHeight * 0.4,
+                        behavior: 'smooth'
+                    });
                 </script>
             """, height=0)
             
             st.markdown("## 📈 Analysis Results")
             
-            # Score display
+            # Score display - Current vs Expected
             col1, col2 = st.columns(2)
             
             with col1:
@@ -223,7 +178,7 @@ def main():
                 delta_text = f"+{potential_gain:.1f}%"
                 st.metric("", f"{expected_score:.1f}%", delta=delta_text, delta_color="normal")
             
-            # Visual chart
+            # Visual line chart showing section-by-section impact
             st.markdown("#### Section-by-Section Impact Analysis")
             
             fig = create_section_impact_chart(sections)
@@ -232,11 +187,12 @@ def main():
             
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # Section analysis
+            # Section-by-section analysis
             st.markdown("---")
             st.markdown("## 🔍 Section-by-Section Analysis")
             st.markdown("*Detailed breakdown of what needs attention in your resume*")
             
+            # Render section cards
             for section in sections:
                 render_section_card(section)
             
