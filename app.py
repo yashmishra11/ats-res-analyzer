@@ -4,6 +4,7 @@ Streamlit-based tool for analyzing resume-job match scores
 """
 
 import streamlit as st
+import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
 
 # Import custom modules
@@ -16,6 +17,12 @@ from text_extractors import extract_text_from_pdf
 from similarity_calculator import calculate_similarity, calculate_expected_score
 from section_analyzer import analyze_sections
 from visualization import create_section_impact_chart
+
+from s3_utils import upload_pdf
+
+from database import init_db, save_resume
+init_db()
+
 
 # Setup NLTK
 setup_nltk()
@@ -104,10 +111,12 @@ def main():
             st.warning("⚠️ Please paste the job description to continue")
             return
         
-        with st.spinner("👀 Analyzing your resume..."):
+        with st.spinner("👀 Analyzing your resume with AI..."):
             # Extract text from PDF
             try:
+                uploaded_file.seek(0)
                 resume_text = extract_text_from_pdf(uploaded_file)
+
             except Exception as e:
                 st.error(f"❌ Error reading PDF: {str(e)}")
                 return
@@ -124,6 +133,16 @@ def main():
             
             # Calculate expected score
             expected_score, potential_gain = calculate_expected_score(similarity_score, sections)
+
+            # Reset file pointer before uploading
+            uploaded_file.seek(0)
+
+            # Upload to S3
+            uploaded_url = upload_pdf(uploaded_file)
+
+            # Save metadata
+            save_resume(uploaded_file.name, uploaded_url, similarity_score)
+
             
             # Display info message
             st.info(
@@ -133,6 +152,17 @@ def main():
             
             # Results display
             st.markdown("---")
+            
+            # Auto-scroll to results with smooth animation
+            components.html("""
+                <script>
+                    window.parent.document.querySelector('section.main').scrollTo({
+                        top: window.parent.document.querySelector('section.main').scrollHeight * 0.4,
+                        behavior: 'smooth'
+                    });
+                </script>
+            """, height=0)
+            
             st.markdown("## 📈 Analysis Results")
             
             # Score display - Current vs Expected
