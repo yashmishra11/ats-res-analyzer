@@ -66,12 +66,6 @@ def main():
         if st.button("🚪 Logout", use_container_width=True):
             logout()
 
-    # Check upload status (shows warning but never blocks analysis)
-    uploads_enabled = is_uploads_enabled()
-    if not uploads_enabled:
-        st.warning(
-            "**.** "
-        )
 
     # ── Inputs ───────────────────────────────────────────────────────────────
     col1, col2 = st.columns([1, 1], gap="large")
