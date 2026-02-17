@@ -196,7 +196,7 @@ def render_admin_dashboard():
                 'Score': f"{r['match_score']:.1f}%" if r['match_score'] else "N/A",
                 'Size': f"{r['file_size'] / 1024:.1f} KB",
                 'Uploaded': pd.to_datetime(r['uploaded_at']).strftime('%Y-%m-%d %H:%M'),
-                'User': r.get('user_email', 'Anonymous')[:20],
+                'User': (r.get('user_email') or 'Anonymous')[:20],
                 'URL': r['s3_url']
             })
         
