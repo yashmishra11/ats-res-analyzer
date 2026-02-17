@@ -4,7 +4,7 @@ Streamlit UI components and styling
 """
 
 import streamlit as st
-from config import APP_TITLE, APP_SUBTITLE, APP_ICON, APP_VERSION
+from config import APP_TITLE, APP_ICON, APP_VERSION
 
 
 def apply_custom_css():
@@ -98,8 +98,7 @@ def render_header():
     """Render the application header"""
     st.markdown(f"""
     <div style="text-align: center; padding: 20px 0;">
-        <h1 style="font-size: 3rem; margin-bottom: 10px;">{APP_ICON} {APP_TITLE}</h1>
-        <p style="color: #8B8B8B; font-size: 1.1rem;">{APP_SUBTITLE}</p>
+        <h1 style="font-size: 3rem; margin-bottom: 10px; margin-top: -50px;">{APP_ICON} {APP_TITLE}</h1>
     </div>
     """, unsafe_allow_html=True)
     st.markdown("---")

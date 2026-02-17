@@ -18,7 +18,7 @@ ADMIN_PASSWORD_HASH = hashlib.sha256(
 
 # For demo - in production, use proper user database
 DEMO_USERS = {
-    "user@example.com": hashlib.sha256("password123".encode()).hexdigest(),
+    "user": hashlib.sha256("123".encode()).hexdigest(),
     "john@example.com": hashlib.sha256("john123".encode()).hexdigest(),
 }
 
@@ -56,8 +56,8 @@ def render_login_page():
     """Render the login page"""
     st.markdown("""
     <div style="text-align: center; padding: 40px 0;">
-        <h1 style="font-size: 3rem; margin-bottom: 10px;">🎯 ATS Resume Analyzer</h1>
-        <p style="color: #8B8B8B; font-size: 1.1rem;">AI-powered resume optimization tool</p>
+        <h1 style="font-size: 3rem; margin-bottom: 10px; margin-top: -100px;">ATS Resume Analyzer</h1>
+        <p style="color: #8B8B8B; font-size: 1.1rem; margin-bottom: -40px;">Resume optimization tool</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -69,7 +69,7 @@ def render_login_page():
     with col2:
         # Toggle between user and admin login
         if not st.session_state.show_admin_login:
-            st.markdown("### 🔐 User Login")
+            st.markdown("👥 User Login")
             
             with st.form("user_login_form"):
                 email = st.text_input("Email", placeholder="user@example.com")
@@ -87,21 +87,14 @@ def render_login_page():
             
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # Demo credentials info
-            with st.expander("📝 Demo Credentials"):
-                st.info(
-                    "**Demo User:**\n"
-                    "- Email: user@example.com\n"
-                    "- Password: password123"
-                )
             
             # Admin login toggle
-            if st.button("🔑 Admin Login", use_container_width=True):
+            if st.button("👨🏻‍💻 Admin Login", use_container_width=True):
                 st.session_state.show_admin_login = True
                 st.rerun()
                 
         else:
-            st.markdown("### 👨‍💼 Admin Login")
+            st.markdown("👨‍💼 Admin Login")
             
             with st.form("admin_login_form"):
                 username = st.text_input("Username", placeholder="admin")
@@ -118,14 +111,6 @@ def render_login_page():
                         st.error("❌ Invalid admin credentials")
             
             st.markdown("<br>", unsafe_allow_html=True)
-            
-            # Demo admin credentials
-            with st.expander("📝 Demo Admin Credentials"):
-                st.info(
-                    "**Demo Admin:**\n"
-                    "- Username: admin\n"
-                    "- Password: admin123"
-                )
             
             # Back to user login
             if st.button("← Back to User Login", use_container_width=True):

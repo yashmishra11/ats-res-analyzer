@@ -4,10 +4,9 @@ Configuration constants for ATS Resume Analyzer
 
 # Application constants
 APP_TITLE = "ATS Resume Analyzer"
-APP_SUBTITLE = "Optimize your resume for Applicant Tracking Systems"
 APP_ICON = "𖤓"
-APP_VERSION = "1.0.0"
-APP_DESCRIPTION = "AI-powered resume analysis tool that helps you optimize your resume for ATS systems"
+APP_VERSION = "1.0.1"
+APP_DESCRIPTION = "Resume analysis tool that helps you optimize your resume for ATS systems"
 
 # UI Color scheme
 PRIMARY_COLOR = "#00D4AA"

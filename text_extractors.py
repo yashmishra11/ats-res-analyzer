@@ -9,7 +9,7 @@ try:
     from PyPDF2 import PdfReader
 except ImportError:
     try:
-        from pypdf import PdfReader
+        from PyPDF2 import PdfReader
     except ImportError:
         PdfReader = None
 

@@ -24,7 +24,7 @@ from database import init_db, save_resume, is_uploads_enabled
 
 # Authentication and admin
 from auth import init_session_state, render_login_page, logout
-from admin_dashboard import render_admin_dashboard, render_admin_stats_widget
+from admin_dashboard import render_admin_dashboard
 
 # Initialize
 init_db()
@@ -45,94 +45,114 @@ apply_custom_css()
 
 def main():
     """Main application logic"""
-    
-    # Check authentication
+
+    # ── Auth gate ────────────────────────────────────────────────────────────
     if not st.session_state.get('authenticated', False):
         render_login_page()
         return
-    
-    # Show admin dashboard if admin
+
+    # ── Admin view ───────────────────────────────────────────────────────────
     if st.session_state.get('is_admin', False):
         render_admin_dashboard()
         return
-    
-    # Regular user interface
+
+    # ── Regular user view ────────────────────────────────────────────────────
     render_header()
     render_sidebar()
-    
-    # Add logout button in sidebar
+
     with st.sidebar:
         st.markdown("---")
         st.markdown(f"**Logged in as:** {st.session_state.user_email}")
         if st.button("🚪 Logout", use_container_width=True):
             logout()
-    
-    # Check if uploads are enabled
+
+    # Check upload status (shows warning but never blocks analysis)
     uploads_enabled = is_uploads_enabled()
-    
     if not uploads_enabled:
-        st.error(
-            "⚠️ **PDF Uploads Currently Disabled**\n\n"
-            "The administrator has temporarily disabled PDF uploads to AWS S3. "
-            "Please try again later or contact support."
+        st.warning(
+            "**.** "
         )
-        st.stop()
-    
-    # Input section
+
+    # ── Inputs ───────────────────────────────────────────────────────────────
     col1, col2 = st.columns([1, 1], gap="large")
-    
+
     with col1:
-        st.markdown("### 📄 Upload Resume")
+        st.markdown(
+            """
+            <style>
+                .upload-resume-heading {
+                    font-size: 1.5rem;
+                }
+                .relocation-section {
+                    margin-top: 50px;  /* Increased spacing */
+                }
+            </style>
+            <div class="upload-resume-heading">
+                📄 Upload Resume
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
         uploaded_file = st.file_uploader(
             "Drag and drop your resume here",
             type=['pdf'],
             help="Upload your resume in PDF format for analysis",
             label_visibility="collapsed"
         )
-    
+        st.markdown(
+            """
+            <div class="relocation-section">
+                📍 Willing to relocate?
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        relocation_choice = st.radio(
+            "relocation",
+            options=["Yes", "No", "Not specified"],
+            index=2,
+            horizontal=True,
+            label_visibility="collapsed"
+        )
+        relocation_preference = (
+            True if relocation_choice == "Yes"
+            else False if relocation_choice == "No"
+            else None
+        )
+
     with col2:
-        st.markdown("### 💼 Job Description")
+        st.markdown(
+            """
+            <style>
+                .job-description-heading {
+                    font-size: 1.5rem;
+                }
+                .analyze_button {
+                    margin-top: 50px;
+                }
+            </style>
+            <div class="job-description-heading">
+                💼 Job Description
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
         job_description = st.text_area(
             "Paste the complete job description",
-            height=235,
+            height=40,
             placeholder="Copy and paste the job posting here, including requirements, responsibilities, and qualifications...",
             label_visibility="collapsed"
         )
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Relocation preference section
-    st.markdown("### 📍 Relocation Preference (Optional)")
-    col1, col2, col3 = st.columns([1, 1, 1])
-    
-    with col1:
-        willing_to_relocate = st.checkbox(
-            "I am willing to relocate for this position",
-            help="Check this if you're open to relocating to the job location"
-        )
-    
-    with col2:
-        not_willing_to_relocate = st.checkbox(
-            "I prefer not to relocate",
-            help="Check this if you prefer to stay in your current location"
-        )
-    
-    # Determine relocation status
-    if willing_to_relocate and not not_willing_to_relocate:
-        relocation_preference = True
-    elif not_willing_to_relocate and not willing_to_relocate:
-        relocation_preference = False
-    else:
-        relocation_preference = None
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Centered analyze button
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+
+        # Create a container for the button with spacing
+        st.markdown('<div class="analyze_button">', unsafe_allow_html=True)
         analyze_button = st.button("🔍 Analyze Resume Match", use_container_width=True)
-    
-    # Analysis logic
+        st.markdown('</div>', unsafe_allow_html=True)
+
+
+
+
+    # ── Analysis ─────────────────────────────────────────────────────────────
     if analyze_button:
         if not uploaded_file:
             st.warning("⚠️ Please upload your resume to continue")
@@ -140,39 +160,31 @@ def main():
         if not job_description:
             st.warning("⚠️ Please paste the job description to continue")
             return
-        
-        with st.spinner("👀 Analyzing your resume with AI..."):
-            # Extract text from PDF
+
+        with st.spinner("👀 Analyzing your resume..."):
+
+            # Extract text
             try:
                 uploaded_file.seek(0)
                 resume_text = extract_text_from_pdf(uploaded_file)
             except Exception as e:
                 st.error(f"❌ Error reading PDF: {str(e)}")
                 return
-            
+
             if not resume_text:
                 st.error("❌ Could not extract text from PDF. Please try another file.")
                 return
-            
-            # Analyze sections
+
+            # Analyze
             sections = analyze_sections(resume_text, job_description, relocation_preference)
-            
-            # Calculate similarity
-            similarity_score, resume_processed, job_processed = calculate_similarity(
-                resume_text, job_description, sections
-            )
-            
-            # Calculate expected score
+            similarity_score, _, _ = calculate_similarity(resume_text, job_description, sections)
             expected_score, potential_gain = calculate_expected_score(similarity_score, sections)
-            
-            # Upload to S3 (only if enabled)
-            uploaded_url = None
+
+            # S3 upload (only if enabled)
             if uploads_enabled:
                 try:
                     uploaded_file.seek(0)
                     uploaded_url = upload_pdf(uploaded_file)
-                    
-                    # Save to database
                     save_resume(
                         uploaded_file.name,
                         uploaded_url,
@@ -180,67 +192,50 @@ def main():
                         expected_score,
                         st.session_state.user_email
                     )
-                    
-                    st.success("✅ Resume uploaded and saved!")
+                    st.success("✅ Resume saved!")
                 except Exception as e:
-                    st.warning(f"⚠️ Upload error: {str(e)}")
-            
-            # Display info message
+                    st.warning(f"⚠️ S3 upload error (analysis still works): {str(e)}")
+
             st.info(
                 "ℹ️ Visual PDFs may affect section extraction. "
                 "The analyzer uses semantic fallbacks where possible."
             )
-            
-            # Results display
-            st.markdown("---")
-            
-            # Auto-scroll to results
+
+            # Auto-scroll
             components.html("""
                 <script>
                     setTimeout(function() {
-                        const mainSection = window.parent.document.querySelector('section.main');
-                        if (mainSection) {
-                            mainSection.scrollBy({
-                                top: 600,
-                                behavior: 'smooth'
-                            });
-                        }
+                        const main = window.parent.document.querySelector('section.main');
+                        if (main) { main.scrollBy({ top: 600, behavior: 'smooth' }); }
                     }, 100);
                 </script>
             """, height=0)
-            
+
+            # ── Results ──────────────────────────────────────────────────────
+            st.markdown("---")
             st.markdown("## 📈 Analysis Results")
-            
-            # Score display
+
             col1, col2 = st.columns(2)
-            
             with col1:
                 st.markdown('<div class="score-label">Current Match Score</div>', unsafe_allow_html=True)
-                st.metric("", f"{similarity_score:.1f}%", delta=None)
-            
+                st.metric("", f"{similarity_score:.1f}%")
             with col2:
                 st.markdown('<div class="score-label">Expected After Improvements</div>', unsafe_allow_html=True)
-                delta_text = f"+{potential_gain:.1f}%"
-                st.metric("", f"{expected_score:.1f}%", delta=delta_text, delta_color="normal")
-            
-            # Visual chart
+                st.metric("", f"{expected_score:.1f}%", delta=f"+{potential_gain:.1f}%", delta_color="normal")
+
             st.markdown("#### Section-by-Section Impact Analysis")
-            
             fig = create_section_impact_chart(sections)
             st.pyplot(fig)
             plt.close()
-            
+
             st.markdown("<br>", unsafe_allow_html=True)
-            
-            # Section analysis
             st.markdown("---")
             st.markdown("## 🔍 Section-by-Section Analysis")
             st.markdown("*Detailed breakdown of what needs attention in your resume*")
-            
+
             for section in sections:
                 render_section_card(section)
-            
-            # Pro tips
+
             st.markdown("---")
             render_pro_tips()
 
