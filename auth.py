@@ -57,7 +57,7 @@ def render_login_page():
     st.markdown("""
     <div style="text-align: center; padding: 40px 0;">
         <h1 style="font-size: 3rem; margin-bottom: 10px; margin-top: -100px;">ATS Resume Analyzer</h1>
-        <p style="color: #8B8B8B; font-size: 1.1rem; margin-bottom: -40px;">Resume optimization tool</p>
+        <p style="color: #8B8B8B; font-size: 1.1rem; margin-bottom: -40px;">Check If Your Resume Passes ATS in Seconds</p>
     </div>
     """, unsafe_allow_html=True)
     

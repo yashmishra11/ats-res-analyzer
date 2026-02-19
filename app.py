@@ -36,7 +36,7 @@ st.set_page_config(
     page_title="ATS Resume Analyzer",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Apply custom CSS
@@ -55,6 +55,8 @@ def main():
     if st.session_state.get('is_admin', False):
         render_admin_dashboard()
         return
+    
+    uploads_enabled = is_uploads_enabled()
 
     # ── Regular user view ────────────────────────────────────────────────────
     render_header()

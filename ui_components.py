@@ -36,7 +36,7 @@ def apply_custom_css():
         
         /* Status badges */
         .status-good {
-            background-color: #00D4AA;
+            background-color: #B8B8B8;
             color: #000;
             padding: 4px 12px;
             border-radius: 12px;
@@ -68,18 +68,18 @@ def apply_custom_css():
             border-radius: 10px;
             padding: 20px;
             margin: 10px 0;
-            border-left: 4px solid #00D4AA;
+            border-left: 4px solid #B8B8B8;
         }
         
         /* Bold keywords in recommendations */
         .section-card strong {
-            color: #00D4AA;
+            color: #B8B8B8;
             font-weight: 700;
         }
         
         /* Buttons */
         .stButton>button {
-            background-color: #00D4AA;
+            background-color: #B8B8B8;
             color: #000;
             font-weight: 600;
             border-radius: 8px;
@@ -107,14 +107,15 @@ def render_header():
 def render_sidebar():
     """Render the sidebar with app information"""
     with st.sidebar:
-        st.markdown(f"### {APP_ICON} About")
+        st.markdown(f"### {APP_ICON } About")
         st.info(
             f"**{APP_TITLE}** v{APP_VERSION}\n\n"
             "An AI-powered tool to analyze and optimize your resume for "
-            "Applicant Tracking Systems (ATS)."
+            "Applicant Tracking Systems (ATS).\n"
+            "Free ATS Resume Checker."
         )
         
-        st.markdown("### 📊 How It Works")
+        st.markdown(" 📊 How It Works")
         st.markdown("""
         1. **Upload** your resume in PDF format
         2. **Paste** the job description
@@ -122,7 +123,7 @@ def render_sidebar():
         4. **Improve** based on recommendations
         """)
         
-        st.markdown("### 💡 Tips")
+        st.markdown("💡 Tips")
         st.markdown("""
         - Use a clean, ATS-friendly resume format
         - Include relevant keywords from the job description
@@ -156,7 +157,7 @@ def render_section_card(section):
     # Determine status badge
     if status == 'good':
         status_html = '<span class="status-good">✓ Good</span>'
-        border_color = "#00D4AA"
+        border_color = "#B8B8B8"
     elif status == 'weak':
         status_html = '<span class="status-weak">⚠ Needs Work</span>'
         border_color = "#FFA500"
@@ -175,7 +176,7 @@ def render_section_card(section):
             <p style="color: #CCCCCC; margin: 0;">
                 <style>
                     .section-card strong {{
-                        color: #00D4AA;
+                        color: #B8B8B8;
                         font-weight: 700;
                     }}
                 </style>

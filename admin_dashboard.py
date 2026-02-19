@@ -161,7 +161,7 @@ def render_admin_dashboard():
         ax.bar(
             range(len(upload_counts)),
             upload_counts.values,
-            color='#00D4AA',
+            color="#414141",
             alpha=0.8
         )
         

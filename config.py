@@ -9,10 +9,10 @@ APP_VERSION = "1.0.1"
 APP_DESCRIPTION = "Resume analysis tool that helps you optimize your resume for ATS systems"
 
 # UI Color scheme
-PRIMARY_COLOR = "#00D4AA"
+PRIMARY_COLOR = "#8C8C8C"
 SECONDARY_COLOR = "#1E1E1E"
 ACCENT_COLOR = "#FF6B6B"
-SUCCESS_COLOR = "#00D4AA"
+SUCCESS_COLOR = "#818181"
 WARNING_COLOR = "#FFA500"
 ERROR_COLOR = "#FF6B6B"
 
