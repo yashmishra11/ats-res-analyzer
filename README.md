@@ -1,4 +1,4 @@
-# ATS Resume Analyzer
+## ATS Resume Analyzer
 
 Resume Optimization Platform that analyzes resume-job match scores using machine learning algorithms.
 
@@ -111,9 +111,7 @@ ADMIN_PASSWORD=your_secure_password
 ```bash
 streamlit run app.py
 ```
-
 ---
-
 ## 📖 Usage
 
 ### Regular Users
