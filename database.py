@@ -60,18 +60,15 @@ def init_db():
         conn.commit()
 
 
-def save_resume(filename, s3_url, match_score=None, expected_score=None, user_email=None):
+def save_resume(filename, s3_url, match_score=None, expected_score=None, user_email=None, file_size=0):
     """Save resume metadata to database"""
     with get_db() as conn:
         cursor = conn.cursor()
         
-        # Try to get file size from S3 URL (estimate)
-        file_size = 0  # Will be populated if needed
-        
         cursor.execute("""
             INSERT INTO resumes (filename, s3_url, file_size, match_score, expected_score, user_email)
             VALUES (?, ?, ?, ?, ?, ?)
-        """, (filename, s3_url, file_size, match_score, expected_score, user_email))
+        """, (filename, s3_url, int(file_size or 0), match_score, expected_score, user_email))
         
         conn.commit()
         return cursor.lastrowid

@@ -9,7 +9,7 @@ try:
     from PyPDF2 import PdfReader
 except ImportError:
     try:
-        from PyPDF2 import PdfReader
+        from pypdf import PdfReader
     except ImportError:
         PdfReader = None
 
@@ -40,7 +40,9 @@ def extract_text_from_pdf(uploaded_file):
         # Extract text from all pages
         text = ""
         for page in pdf_reader.pages:
-            text += page.extract_text() + "\n"
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text + "\n"
         
         return text.strip()
         

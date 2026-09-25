@@ -11,10 +11,10 @@ from typing import Set, List, Tuple, Optional
 TECHNOLOGIES = {
     'python', 'java', 'javascript', 'typescript', 'c++', 'c#', 'ruby', 'php', 'swift', 'kotlin',
     'go', 'rust', 'scala', 'r', 'matlab', 'html', 'css', 'sql', 'nosql',
-    'react', 'angular', 'vue', 'svelte', 'next.js', 'nuxt', 'gatsby',
-    'node.js', 'express', 'django', 'flask', 'fastapi', 'spring', 'laravel', 'rails',
-    'mongodb', 'postgresql', 'mysql', 'redis', 'elasticsearch', 'cassandra',
-    'docker', 'kubernetes', 'jenkins', 'git', 'github', 'gitlab', 'bitbucket',
+    'react', 'reactjs', 'angular', 'vue', 'vuejs', 'svelte', 'next.js', 'nextjs', 'nuxt', 'gatsby',
+    'node.js', 'nodejs', 'express', 'django', 'flask', 'fastapi', 'spring', 'laravel', 'rails',
+    'mongodb', 'mongo', 'postgresql', 'postgres', 'mysql', 'redis', 'elasticsearch', 'cassandra',
+    'docker', 'kubernetes', 'k8s', 'jenkins', 'git', 'github', 'gitlab', 'bitbucket',
     'aws', 'azure', 'gcp', 'heroku', 'vercel', 'netlify',
     'tensorflow', 'pytorch', 'keras', 'scikit-learn', 'pandas', 'numpy',
     'rest', 'graphql', 'grpc', 'websockets', 'api',
@@ -27,6 +27,16 @@ SOFT_SKILLS = {
     'creative', 'organized', 'detail-oriented', 'time-management', 'adaptable',
     'collaborative', 'initiative', 'critical-thinking', 'decision-making'
 }
+
+
+def _build_boundary_pattern(term: str) -> re.Pattern:
+    """Build a regex pattern that matches the term respecting boundaries for symbols like C++ or C#"""
+    escaped = re.escape(term)
+    return re.compile(r'(?:^|[^\w\+#])' + escaped + r'(?:[^\w\+#]|$)', re.IGNORECASE)
+
+
+TECH_PATTERNS = {tech: _build_boundary_pattern(tech) for tech in TECHNOLOGIES}
+SOFT_SKILL_PATTERNS = {skill: _build_boundary_pattern(skill) for skill in SOFT_SKILLS}
 
 
 def normalize_skill(skill: str) -> str:
@@ -55,30 +65,28 @@ def normalize_skill(skill: str) -> str:
 
 
 def extract_skills(text: str) -> Set[str]:
-    """Extract skills from text"""
-    text_lower = text.lower()
+    """Extract skills from text using boundary matching"""
     found_skills = set()
     
     # Extract technologies
-    for tech in TECHNOLOGIES:
-        if tech in text_lower:
+    for tech, pattern in TECH_PATTERNS.items():
+        if pattern.search(text):
             found_skills.add(tech)
     
     # Extract soft skills
-    for skill in SOFT_SKILLS:
-        if skill in text_lower:
+    for skill, pattern in SOFT_SKILL_PATTERNS.items():
+        if pattern.search(text):
             found_skills.add(skill)
     
     return found_skills
 
 
 def extract_technologies(text: str) -> Set[str]:
-    """Extract only technical skills/technologies from text"""
-    text_lower = text.lower()
+    """Extract only technical skills/technologies from text using boundary matching"""
     found_tech = set()
     
-    for tech in TECHNOLOGIES:
-        if tech in text_lower:
+    for tech, pattern in TECH_PATTERNS.items():
+        if pattern.search(text):
             found_tech.add(tech)
     
     return found_tech

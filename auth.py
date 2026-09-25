@@ -10,11 +10,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Admin credentials from environment variables
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD_HASH = hashlib.sha256(
-    os.getenv("ADMIN_PASSWORD", "admin123").encode()
-).hexdigest()
+def get_config_val(key, default=""):
+    """Retrieve config from Streamlit secrets if available, fallback to os.getenv"""
+    try:
+        if hasattr(st, "secrets") and key in st.secrets:
+            return st.secrets[key]
+    except Exception:
+        pass
+    return os.getenv(key, default)
+
 
 # For demo - in production, use proper user database
 DEMO_USERS = {
@@ -30,8 +34,9 @@ def hash_password(password):
 
 def check_admin_credentials(username, password):
     """Check if admin credentials are valid"""
-    password_hash = hash_password(password)
-    return username == ADMIN_USERNAME and password_hash == ADMIN_PASSWORD_HASH
+    admin_user = get_config_val("ADMIN_USERNAME", "admin")
+    admin_pass = get_config_val("ADMIN_PASSWORD", "admin123")
+    return username == admin_user and hash_password(password) == hash_password(admin_pass)
 
 
 def check_user_credentials(email, password):
@@ -53,28 +58,43 @@ def init_session_state():
 
 
 def render_login_page():
-    """Render the login page"""
+    """Render the cyberpunk terminal login page"""
     st.markdown("""
-    <div style="text-align: center; padding: 40px 0;">
-        <h1 style="font-size: 3rem; margin-bottom: 10px; margin-top: -100px;">ATS Resume Analyzer</h1>
-        <p style="color: #8B8B8B; font-size: 1.1rem; margin-bottom: -40px;">Check If Your Resume Passes ATS in Seconds</p>
+    <div style="text-align: center; padding: 25px 0 10px 0;">
+        <div style="font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #00d4ff; letter-spacing: 3px; margin-bottom: 8px;">
+            // TERMINAL_AUTH_GATEWAY // NODE_ID: 0x889F //
+        </div>
+        <h1 class="cyber-glitch" style="font-size: 3rem; margin: 0; font-weight: 900; letter-spacing: 4px;">
+            ATS RESUME ANALYZER
+        </h1>
+        <p style="font-family: 'Share Tech Mono', monospace; color: #8e8e93; font-size: 1rem; letter-spacing: 2px; margin-top: 6px;">
+            NEURAL GATEKEEPER BYPASS SYSTEM <span class="cyber-cursor"></span>
+        </p>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Center the login form
+    # Center the login form inside a cyber card container
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        # Toggle between user and admin login
         if not st.session_state.show_admin_login:
-            st.markdown("👥 User Login")
+            st.markdown("""
+            <div style="background: #12121a; border: 1px solid #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); padding: 18px 24px 10px 24px; clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px)); margin-bottom: 15px;">
+                <div style="font-family: 'Orbitron', monospace; font-size: 15px; color: #00ff88; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px;">
+                    &gt; USER ACCESS PROTOCOL
+                </div>
+                <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #6b7280; margin-bottom: 10px;">
+                    ENTER VERIFIED CREDENTIALS TO INITIALIZE SCANNER
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
             
             with st.form("user_login_form"):
-                email = st.text_input("Email", placeholder="user@example.com")
-                password = st.text_input("Password", type="password", placeholder="Enter your password")
-                login_button = st.form_submit_button("Login", use_container_width=True)
+                email = st.text_input("USER_EMAIL // IDENTIFIER", placeholder="user or user@example.com")
+                password = st.text_input("SECURITY_KEY // PASSWORD", type="password", placeholder="Enter key (e.g. 123)")
+                login_button = st.form_submit_button("⚡ INITIALIZE SESSION", use_container_width=True)
                 
                 if login_button:
                     if check_user_credentials(email, password):
@@ -83,23 +103,31 @@ def render_login_page():
                         st.session_state.user_email = email
                         st.rerun()
                     else:
-                        st.error("❌ Invalid credentials")
+                        st.error("❌ ACCESS DENIED // INVALID IDENTITY MATRIX")
             
             st.markdown("<br>", unsafe_allow_html=True)
             
-            
             # Admin login toggle
-            if st.button("👨🏻‍💻 Admin Login", use_container_width=True):
+            if st.button("🔑 SWITCH TO ELEVATED ROOT ACCESS", use_container_width=True):
                 st.session_state.show_admin_login = True
                 st.rerun()
                 
         else:
-            st.markdown("👨‍💼 Admin Login")
+            st.markdown("""
+            <div style="background: #12121a; border: 1px solid #ff00ff; box-shadow: 0 0 15px rgba(255, 0, 255, 0.25); padding: 18px 24px 10px 24px; clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px)); margin-bottom: 15px;">
+                <div style="font-family: 'Orbitron', monospace; font-size: 15px; color: #ff00ff; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px;">
+                    &gt; ROOT / ADMIN OVERRIDE
+                </div>
+                <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #6b7280; margin-bottom: 10px;">
+                    PRIVILEGED TERMINAL CONTROLS & TELEMETRY ACCESS
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
             
             with st.form("admin_login_form"):
-                username = st.text_input("Username", placeholder="admin")
-                password = st.text_input("Password", type="password", placeholder="Enter admin password")
-                admin_login_button = st.form_submit_button("Login as Admin", use_container_width=True)
+                username = st.text_input("ROOT_USER // USERNAME", placeholder="admin")
+                password = st.text_input("CIPHER_KEY // ADMIN_PASSWORD", type="password", placeholder="Enter root cipher")
+                admin_login_button = st.form_submit_button("⚡ AUTHENTICATE ROOT", use_container_width=True)
                 
                 if admin_login_button:
                     if check_admin_credentials(username, password):
@@ -108,12 +136,12 @@ def render_login_page():
                         st.session_state.user_email = "admin"
                         st.rerun()
                     else:
-                        st.error("❌ Invalid admin credentials")
+                        st.error("❌ CIPHER MISMATCH // ROOT ACCESS REFUSED")
             
             st.markdown("<br>", unsafe_allow_html=True)
             
             # Back to user login
-            if st.button("← Back to User Login", use_container_width=True):
+            if st.button("← RETURN TO STANDARD ACCESS", use_container_width=True):
                 st.session_state.show_admin_login = False
                 st.rerun()
 

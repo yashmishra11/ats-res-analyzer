@@ -75,16 +75,11 @@ def main():
     with col1:
         st.markdown(
             """
-            <style>
-                .upload-resume-heading {
-                    font-size: 1.5rem;
-                }
-                .relocation-section {
-                    margin-top: 50px;  /* Increased spacing */
-                }
-            </style>
-            <div class="upload-resume-heading">
-                📄 Upload Resume
+            <div style="font-family: 'Orbitron', monospace; font-size: 1.25rem; font-weight: 700; color: #00d4ff; letter-spacing: 2px; margin-bottom: 8px;">
+                [ 01 // INGEST RESUME ]
+            </div>
+            <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #6b7280; margin-bottom: 12px;">
+                FEED PDF DATASTREAM FOR VECTOR TOKENIZATION
             </div>
             """,
             unsafe_allow_html=True
@@ -97,8 +92,11 @@ def main():
         )
         st.markdown(
             """
-            <div class="relocation-section">
-                📍 Willing to relocate?
+            <div style="margin-top: 30px; font-family: 'Orbitron', monospace; font-size: 1.05rem; font-weight: 700; color: #ff00ff; letter-spacing: 1.5px; margin-bottom: 6px;">
+                [ 02 // RELOCATION MOBILITY ]
+            </div>
+            <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #6b7280; margin-bottom: 8px;">
+                INDICATE PHYSICAL / REMOTE VECTOR AVAILABILITY
             </div>
             """,
             unsafe_allow_html=True
@@ -119,30 +117,24 @@ def main():
     with col2:
         st.markdown(
             """
-            <style>
-                .job-description-heading {
-                    font-size: 1.5rem;
-                }
-                .analyze_button {
-                    margin-top: 50px;
-                }
-            </style>
-            <div class="job-description-heading">
-                💼 Job Description
+            <div style="font-family: 'Orbitron', monospace; font-size: 1.25rem; font-weight: 700; color: #00ff88; letter-spacing: 2px; margin-bottom: 8px;">
+                [ 03 // TARGET SPECIFICATION ]
+            </div>
+            <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #6b7280; margin-bottom: 12px;">
+                PASTE RAW JOB DESCRIPTION // EXTRACT COMPLIANCE MATRIX
             </div>
             """,
             unsafe_allow_html=True
         )
         job_description = st.text_area(
             "Paste the complete job description",
-            height=40,
-            placeholder="Copy and paste the job posting here, including requirements, responsibilities, and qualifications...",
+            height=140,
+            placeholder="> Paste target job posting specification (requirements, tech stack, qualifications)...",
             label_visibility="collapsed"
         )
 
-        # Create a container for the button with spacing
-        st.markdown('<div class="analyze_button">', unsafe_allow_html=True)
-        analyze_button = st.button("🔍 Analyze Resume Match", use_container_width=True)
+        st.markdown('<div style="margin-top: 25px;">', unsafe_allow_html=True)
+        analyze_button = st.button("⚡ EXECUTE NEURAL SCAN & MATCH", use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
 
@@ -157,18 +149,18 @@ def main():
             st.warning("⚠️ Please paste the job description to continue")
             return
 
-        with st.spinner("👀 Analyzing your resume..."):
+        with st.spinner("⚡ INITIALIZING NEURAL MATRICES & EXECUTING SCAN..."):
 
             # Extract text
             try:
                 uploaded_file.seek(0)
                 resume_text = extract_text_from_pdf(uploaded_file)
             except Exception as e:
-                st.error(f"❌ Error reading PDF: {str(e)}")
+                st.error(f"❌ PDF_STREAM_CORRUPTION: {str(e)}")
                 return
 
             if not resume_text:
-                st.error("❌ Could not extract text from PDF. Please try another file.")
+                st.error("❌ ZERO_TEXT_PAYLOAD // Unreadable or image-only PDF stream.")
                 return
 
             # Analyze
@@ -180,21 +172,26 @@ def main():
             if uploads_enabled:
                 try:
                     uploaded_file.seek(0)
+                    file_size = getattr(uploaded_file, 'size', 0)
+                    if not file_size:
+                        file_size = len(uploaded_file.getvalue())
+                    uploaded_file.seek(0)
                     uploaded_url = upload_pdf(uploaded_file)
                     save_resume(
                         uploaded_file.name,
                         uploaded_url,
                         similarity_score,
                         expected_score,
-                        st.session_state.user_email
+                        st.session_state.user_email,
+                        file_size=file_size
                     )
-                    st.success("✅ Resume saved!")
+                    st.success("✅ PAYLOAD ARCHIVED // S3 ENCRYPTED VAULT SYNCED")
                 except Exception as e:
-                    st.warning(f"⚠️ S3 upload error (analysis still works): {str(e)}")
+                    st.warning(f"⚠️ VAULT_UPLOAD_BYPASS: {str(e)}")
 
             st.info(
-                "ℹ️ Visual PDFs may affect section extraction. "
-                "The analyzer uses semantic fallbacks where possible."
+                "ℹ️ TELEMETRY_NOTE: Visual or multi-column PDFs can introduce OCR artifacts. "
+                "Semantic neural fallbacks were deployed."
             )
 
             # Auto-scroll
@@ -209,25 +206,46 @@ def main():
 
             # ── Results ──────────────────────────────────────────────────────
             st.markdown("---")
-            st.markdown("## 📈 Analysis Results")
+            st.markdown("""
+            <div style="margin-top: 15px; margin-bottom: 20px;">
+                <div style="font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #00d4ff; letter-spacing: 3px;">
+                    // TELEMETRY READOUT // SCAN COMPLETE //
+                </div>
+                <h2 style="font-family: 'Orbitron', monospace; font-size: 2.2rem; color: #ffffff; letter-spacing: 3px; margin: 4px 0 0 0;">
+                    📈 RESUME COMPLIANCE MATRIX
+                </h2>
+            </div>
+            """, unsafe_allow_html=True)
 
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown('<div class="score-label">Current Match Score</div>', unsafe_allow_html=True)
+                st.markdown('<div class="score-label">Current ATS Vector Match</div>', unsafe_allow_html=True)
                 st.metric("", f"{similarity_score:.1f}%")
             with col2:
-                st.markdown('<div class="score-label">Expected After Improvements</div>', unsafe_allow_html=True)
+                st.markdown('<div class="score-label">Optimized Potential After Fixes</div>', unsafe_allow_html=True)
                 st.metric("", f"{expected_score:.1f}%", delta=f"+{potential_gain:.1f}%", delta_color="normal")
 
-            st.markdown("#### Section-by-Section Impact Analysis")
+            st.markdown("""
+            <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #00ff88; letter-spacing: 1.5px; margin-top: 25px; margin-bottom: 8px;">
+                // SECTION-BY-SECTION TRAJECTORY ANALYSIS
+            </div>
+            """, unsafe_allow_html=True)
             fig = create_section_impact_chart(sections)
             st.pyplot(fig)
             plt.close()
 
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("---")
-            st.markdown("## 🔍 Section-by-Section Analysis")
-            st.markdown("*Detailed breakdown of what needs attention in your resume*")
+            st.markdown("""
+            <div style="margin-top: 10px; margin-bottom: 20px;">
+                <h2 style="font-family: 'Orbitron', monospace; font-size: 1.8rem; color: #ffffff; letter-spacing: 2px; margin: 0;">
+                    🔍 SECTOR-BY-SECTOR DIAGNOSTIC
+                </h2>
+                <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #6b7280; letter-spacing: 1.5px; margin-top: 4px;">
+                    // GRANULAR COMPONENT AUDIT OF RESUME DEFICITS &amp; HIGH-VALUE TARGETS
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
             for section in sections:
                 render_section_card(section)

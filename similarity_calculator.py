@@ -125,11 +125,16 @@ def calculate_similarity(resume_text, job_description, sections=None):
     skills_score = min(skills_score, 1.0)
 
     # ---------- Important Keywords ----------
-    job_words = set(job_description.lower().split())
-    resume_words = set(resume_text.lower().split())
-
-    job_imp = set([kw for kw in IMPORTANT_KEYWORDS if kw in job_words])
-    resume_imp = set([kw for kw in IMPORTANT_KEYWORDS if kw in resume_words])
+    text_lower_job = job_description.lower()
+    text_lower_res = resume_text.lower()
+    job_imp = set()
+    resume_imp = set()
+    for kw in IMPORTANT_KEYWORDS:
+        pattern = r'(?:^|[^\w\-/])' + re.escape(kw) + r'(?:[^\w\-/]|$)'
+        if re.search(pattern, text_lower_job):
+            job_imp.add(kw)
+        if re.search(pattern, text_lower_res):
+            resume_imp.add(kw)
 
     if job_imp:
         keywords_score = len(resume_imp & job_imp) / len(job_imp)

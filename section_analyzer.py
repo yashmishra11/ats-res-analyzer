@@ -551,10 +551,19 @@ def analyze_keywords_section(resume_text, job_description):
     Returns:
         dict: Analysis results for keywords section
     """
-    job_words = set(job_description.lower().split())
-    resume_words = set(resume_text.lower().split())
+    text_lower_job = job_description.lower()
+    text_lower_res = resume_text.lower()
     
-    missing_important = [kw for kw in IMPORTANT_KEYWORDS if kw in job_words and kw not in resume_words]
+    job_imp = set()
+    resume_imp = set()
+    for kw in IMPORTANT_KEYWORDS:
+        pattern = r'(?:^|[^\w\-/])' + re.escape(kw) + r'(?:[^\w\-/]|$)'
+        if re.search(pattern, text_lower_job):
+            job_imp.add(kw)
+        if re.search(pattern, text_lower_res):
+            resume_imp.add(kw)
+            
+    missing_important = [kw for kw in IMPORTANT_KEYWORDS if kw in job_imp and kw not in resume_imp]
     
     if len(missing_important) > 5:
         status = "weak"

@@ -48,8 +48,8 @@ ats-resume-analyzer/
 ### Analysis Modules
 
 - **similarity_calculator.py**: Calculates resume-job match scores using:
-  - TF-IDF similarity (40% weight)
-  - Skills matching (30% weight)
+  - Skills matching (40% weight)
+  - TF-IDF similarity (30% weight)
   - Keyword matching (20% weight)
   - Section completeness (10% weight)
 
@@ -206,8 +206,8 @@ Modify weights in `config.py`:
 
 ```python
 SCORE_WEIGHTS = {
-    'tfidf': 0.40,
-    'skills': 0.30,
+    'tfidf': 0.30,
+    'skills': 0.40,
     'keywords': 0.20,
     'sections': 0.10
 }
@@ -222,8 +222,8 @@ Add templates to `recommendation_generator.py` in `keyword_templates` dictionary
 ## 𖤓 Analysis Components
 
 ### Similarity Score Calculation
-- **TF-IDF Similarity** (40%): Measures overall text similarity
-- **Skills Matching** (30%): Compares technical skills and technologies
+- **Skills Matching** (40%): Compares technical skills and technologies
+- **TF-IDF Similarity** (30%): Measures overall text similarity
 - **Keywords Matching** (20%): Checks for important keywords
 - **Section Completeness** (10%): Verifies all necessary sections are present
 
