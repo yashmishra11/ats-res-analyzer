@@ -8,25 +8,34 @@ APP_ICON = "𖤓"
 APP_VERSION = "1.0.1"
 APP_DESCRIPTION = "Resume analysis tool that helps you optimize your resume for ATS systems"
 
-# Cyberpunk / Glitch Design Token System
-BACKGROUND_COLOR = "#0a0a0f"     # Deep void black with slight blue undertone
-FOREGROUND_COLOR = "#e0e0e0"     # Primary text, soft high-tech white
-CARD_COLOR = "#12121a"           # Deep purple-black container
-MUTED_COLOR = "#1c1c2e"          # UI chrome/elevated backgrounds
-MUTED_FOREGROUND = "#6b7280"     # Secondary text
-ACCENT_COLOR = "#00ff88"         # PRIMARY NEON - Electric green (Matrix)
-ACCENT_SECONDARY = "#ff00ff"     # SECONDARY NEON - Hot magenta/pink
-ACCENT_TERTIARY = "#00d4ff"      # TERTIARY NEON - Cyan/electric blue
-BORDER_COLOR = "#2a2a3a"         # Technical HUD border
-INPUT_COLOR = "#12121a"          # Terminal input background
-RING_COLOR = "#00ff88"           # Focus ring
-DESTRUCTIVE_COLOR = "#ff3366"    # Critical/error red-pink
+# Bauhaus Design Token System
+BACKGROUND_COLOR = "#F0F0F0"     # Off-white canvas
+FOREGROUND_COLOR = "#121212"     # Stark Black
+CARD_COLOR = "#FFFFFF"           # Clean white card surface
+MUTED_COLOR = "#E0E0E0"          # Bauhaus muted grey
+MUTED_FOREGROUND = "#333333"     # Secondary text
+ACCENT_COLOR = "#D02020"         # Bauhaus Red (Primary)
+ACCENT_SECONDARY = "#1040C0"     # Bauhaus Blue
+ACCENT_TERTIARY = "#F0C020"      # Bauhaus Yellow
+BORDER_COLOR = "#121212"         # Stark Black border
+INPUT_COLOR = "#FFFFFF"          # Pure white input background
+RING_COLOR = "#1040C0"           # Focus ring Bauhaus Blue
+DESTRUCTIVE_COLOR = "#D02020"    # Bauhaus Red
 
-# Legacy aliases mapped to Cyberpunk palette
+# Bauhaus Pure Primary Color Constants
+BAUHAUS_RED = "#D02020"
+BAUHAUS_BLUE = "#1040C0"
+BAUHAUS_YELLOW = "#F0C020"
+BAUHAUS_BLACK = "#121212"
+BAUHAUS_WHITE = "#FFFFFF"
+BAUHAUS_CANVAS = "#F0F0F0"
+BAUHAUS_MUTED = "#E0E0E0"
+
+# Legacy aliases mapped to Bauhaus palette
 PRIMARY_COLOR = ACCENT_COLOR
-SECONDARY_COLOR = CARD_COLOR
-SUCCESS_COLOR = ACCENT_COLOR
-WARNING_COLOR = "#ffa500"
+SECONDARY_COLOR = ACCENT_SECONDARY
+SUCCESS_COLOR = ACCENT_SECONDARY
+WARNING_COLOR = ACCENT_TERTIARY
 ERROR_COLOR = DESTRUCTIVE_COLOR
 
 # Score thresholds for status badges

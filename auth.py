@@ -58,43 +58,51 @@ def init_session_state():
 
 
 def render_login_page():
-    """Render the cyberpunk terminal login page"""
+    """Render the Bauhaus constructivist login page"""
     st.markdown("""
-    <div style="text-align: center; padding: 25px 0 10px 0;">
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #00d4ff; letter-spacing: 3px; margin-bottom: 8px;">
-            // TERMINAL_AUTH_GATEWAY // NODE_ID: 0x889F //
+    <div style="text-align: center; padding: 24px 0 16px 0;">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div class="circle-shape" style="width: 22px; height: 22px; background: #D02020; border: 3px solid #121212;"></div>
+            <div style="width: 20px; height: 20px; background: #1040C0; border: 3px solid #121212;"></div>
+            <div style="width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-bottom: 20px solid #F0C020;"></div>
+            <span style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 800; color: #121212; letter-spacing: 3px; text-transform: uppercase; margin-left: 6px;">
+                BAUHAUS 1925
+            </span>
         </div>
-        <h1 class="cyber-glitch" style="font-size: 3rem; margin: 0; font-weight: 900; letter-spacing: 4px;">
+        <h1 style="font-size: 3.2rem; margin: 0; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; color: #121212;">
             ATS RESUME ANALYZER
         </h1>
-        <p style="font-family: 'Share Tech Mono', monospace; color: #8e8e93; font-size: 1rem; letter-spacing: 2px; margin-top: 6px;">
-            NEURAL GATEKEEPER BYPASS SYSTEM <span class="cyber-cursor"></span>
+        <p style="font-family: 'Outfit', sans-serif; color: #444444; font-size: 14px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px;">
+            CONSTRUCTIVIST RESUME AUDITING &amp; OPTIMIZATION
         </p>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Center the login form inside a cyber card container
+    # Center the login form inside a Bauhaus card container
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
         if not st.session_state.show_admin_login:
             st.markdown("""
-            <div style="background: #12121a; border: 1px solid #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); padding: 18px 24px 10px 24px; clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px)); margin-bottom: 15px;">
-                <div style="font-family: 'Orbitron', monospace; font-size: 15px; color: #00ff88; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px;">
-                    &gt; USER ACCESS PROTOCOL
+            <div style="background: #1040C0; color: #FFFFFF; border: 4px solid #121212; box-shadow: 6px 6px 0px 0px #121212; padding: 16px 20px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="circle-shape" style="width: 14px; height: 14px; background: #F0C020; border: 2px solid #121212;"></div>
+                    <span style="font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">
+                        USER ACCESS AUTHENTICATION
+                    </span>
                 </div>
-                <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #6b7280; margin-bottom: 10px;">
-                    ENTER VERIFIED CREDENTIALS TO INITIALIZE SCANNER
+                <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; color: #E0E0E0; margin-top: 4px;">
+                    Enter verified credentials to initiate resume compliance scanner
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
             with st.form("user_login_form"):
-                email = st.text_input("USER_EMAIL // IDENTIFIER", placeholder="user or user@example.com")
-                password = st.text_input("SECURITY_KEY // PASSWORD", type="password", placeholder="Enter key (e.g. 123)")
-                login_button = st.form_submit_button("⚡ INITIALIZE SESSION", use_container_width=True)
+                email = st.text_input("EMAIL IDENTIFIER", placeholder="user or user@example.com")
+                password = st.text_input("SECURITY KEY", type="password", placeholder="Enter key (e.g. 123)")
+                login_button = st.form_submit_button("■ INITIALIZE SESSION", use_container_width=True)
                 
                 if login_button:
                     if check_user_credentials(email, password):
@@ -103,31 +111,34 @@ def render_login_page():
                         st.session_state.user_email = email
                         st.rerun()
                     else:
-                        st.error("❌ ACCESS DENIED // INVALID IDENTITY MATRIX")
+                        st.error("❌ AUTHENTICATION REFUSED // INVALID CREDENTIALS")
             
             st.markdown("<br>", unsafe_allow_html=True)
             
             # Admin login toggle
-            if st.button("🔑 SWITCH TO ELEVATED ROOT ACCESS", use_container_width=True):
+            if st.button("▲ SWITCH TO ELEVATED ROOT ACCESS", use_container_width=True):
                 st.session_state.show_admin_login = True
                 st.rerun()
                 
         else:
             st.markdown("""
-            <div style="background: #12121a; border: 1px solid #ff00ff; box-shadow: 0 0 15px rgba(255, 0, 255, 0.25); padding: 18px 24px 10px 24px; clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px)); margin-bottom: 15px;">
-                <div style="font-family: 'Orbitron', monospace; font-size: 15px; color: #ff00ff; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px;">
-                    &gt; ROOT / ADMIN OVERRIDE
+            <div style="background: #F0C020; color: #121212; border: 4px solid #121212; box-shadow: 6px 6px 0px 0px #121212; padding: 16px 20px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 14px; height: 14px; background: #D02020; border: 2px solid #121212;"></div>
+                    <span style="font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">
+                        ROOT / ADMIN ACCESS
+                    </span>
                 </div>
-                <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #6b7280; margin-bottom: 10px;">
-                    PRIVILEGED TERMINAL CONTROLS & TELEMETRY ACCESS
+                <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; color: #121212; margin-top: 4px;">
+                    Elevated system controls & telemetry inspection
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
             with st.form("admin_login_form"):
-                username = st.text_input("ROOT_USER // USERNAME", placeholder="admin")
-                password = st.text_input("CIPHER_KEY // ADMIN_PASSWORD", type="password", placeholder="Enter root cipher")
-                admin_login_button = st.form_submit_button("⚡ AUTHENTICATE ROOT", use_container_width=True)
+                username = st.text_input("ROOT USERNAME", placeholder="admin")
+                password = st.text_input("ROOT CIPHER KEY", type="password", placeholder="Enter root cipher")
+                admin_login_button = st.form_submit_button("■ AUTHENTICATE ROOT", use_container_width=True)
                 
                 if admin_login_button:
                     if check_admin_credentials(username, password):
@@ -141,7 +152,7 @@ def render_login_page():
             st.markdown("<br>", unsafe_allow_html=True)
             
             # Back to user login
-            if st.button("← RETURN TO STANDARD ACCESS", use_container_width=True):
+            if st.button("● RETURN TO STANDARD ACCESS", use_container_width=True):
                 st.session_state.show_admin_login = False
                 st.rerun()
 

@@ -68,7 +68,7 @@ def calculate_section_scores(sections_analysis):
 
 def create_section_impact_chart(sections_analysis):
     """
-    Create section-by-section impact analysis chart with Cyberpunk HUD aesthetic
+    Create section-by-section impact analysis chart with Bauhaus constructivist aesthetic
     
     Args:
         sections_analysis (list): List of section analysis dictionaries
@@ -79,67 +79,71 @@ def create_section_impact_chart(sections_analysis):
     section_scores = calculate_section_scores(sections_analysis)
     
     fig, ax = plt.subplots(figsize=(12, 6))
-    fig.patch.set_facecolor('#0a0a0f')
-    ax.set_facecolor('#0a0a0f')
+    fig.patch.set_facecolor('#F0F0F0')
+    ax.set_facecolor('#FFFFFF')
     
     x_positions = list(range(len(section_scores['labels'])))
     
-    # Current score line (Neon Cyan - #00d4ff)
+    # Current score line (Bauhaus Red - #D02020)
     ax.plot(
         x_positions, section_scores['current'], 
-        marker='D', markersize=7, linewidth=2.8, 
-        color='#00d4ff', label='CURRENT TELEMETRY', alpha=0.9
+        marker='s', markersize=8, linewidth=3.2, 
+        color='#D02020', markeredgecolor='#121212', markeredgewidth=2,
+        label='CURRENT AUDIT', alpha=1.0
     )
     
-    # Expected score line (Electric Green - #00ff88)
+    # Expected score line (Bauhaus Blue - #1040C0)
     ax.plot(
         x_positions, section_scores['expected'], 
-        marker='s', markersize=7, linewidth=2.8, 
-        color='#00ff88', label='OPTIMIZED TRAJECTORY', alpha=0.95
+        marker='o', markersize=9, linewidth=3.2, 
+        color='#1040C0', markeredgecolor='#121212', markeredgewidth=2,
+        label='OPTIMIZED TRAJECTORY', alpha=1.0
     )
     
-    # Fill area between lines (Cyber neon delta zone)
+    # Fill area between lines (Bauhaus Yellow delta zone)
     ax.fill_between(
         x_positions, section_scores['current'], section_scores['expected'], 
-        alpha=0.18, color='#00ff88'
+        alpha=0.35, color='#F0C020'
     )
     
     # Customize technical axes
     ax.set_xticks(x_positions)
     ax.set_xticklabels(
         section_scores['labels'], rotation=0, ha='center', 
-        fontsize=9, color='#00d4ff', fontweight='bold'
+        fontsize=9.5, color='#121212', fontweight='heavy'
     )
-    ax.set_ylim(35, 102)
-    ax.set_ylabel('SCORE COEFFICIENT (%)', color='#6b7280', fontsize=10)
-    ax.set_xlabel('RESUME SECTORS // ANALYSIS CHANNELS', color='#6b7280', fontsize=10)
-    ax.tick_params(colors='#6b7280', labelsize=9)
-    ax.grid(axis='y', alpha=0.25, color='#2a2a3a', linestyle='--')
-    ax.grid(axis='x', alpha=0.15, color='#2a2a3a', linestyle=':')
+    ax.set_ylim(35, 104)
+    ax.set_ylabel('SCORE INDEX (%)', color='#121212', fontsize=11, fontweight='heavy')
+    ax.set_xlabel('RESUME CRITERIA CHANNELS', color='#121212', fontsize=11, fontweight='heavy')
+    ax.tick_params(colors='#121212', labelsize=9.5, width=2)
+    ax.grid(axis='y', alpha=0.18, color='#121212', linestyle='--')
+    ax.grid(axis='x', alpha=0.10, color='#121212', linestyle=':')
     
-    # Style HUD spines
+    # Style Bauhaus Spines (Thick stark black framing)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.spines['left'].set_color('#2a2a3a')
-    ax.spines['bottom'].set_color('#2a2a3a')
+    ax.spines['left'].set_color('#121212')
+    ax.spines['left'].set_linewidth(3)
+    ax.spines['bottom'].set_color('#121212')
+    ax.spines['bottom'].set_linewidth(3)
     
-    # Cyberpunk Legend
+    # Bauhaus Legend
     legend = ax.legend(
-        loc='lower right', framealpha=0.85, facecolor='#12121a', 
-        edgecolor='#00ff88', fontsize=9, labelcolor='#e0e0e0'
+        loc='lower right', framealpha=1.0, facecolor='#FFFFFF', 
+        edgecolor='#121212', fontsize=9.5, labelcolor='#121212'
     )
-    legend.get_frame().set_linewidth(1.2)
+    legend.get_frame().set_linewidth(2.5)
     
-    # Add neon values on points
+    # Add values on points
     for i, (curr, exp) in enumerate(zip(section_scores['current'], section_scores['expected'])):
         ax.text(
-            i, curr - 3.5, f'{int(curr)}%', ha='center', va='top', 
-            fontsize=8.5, color='#00d4ff', weight='bold'
+            i, curr - 4.0, f'{int(curr)}%', ha='center', va='top', 
+            fontsize=9, color='#D02020', weight='heavy'
         )
         if exp != curr:
             ax.text(
                 i, exp + 2.5, f'{int(exp)}%', ha='center', va='bottom', 
-                fontsize=8.5, color='#00ff88', weight='bold'
+                fontsize=9, color='#1040C0', weight='heavy'
             )
     
     plt.tight_layout()

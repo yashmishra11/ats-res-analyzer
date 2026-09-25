@@ -75,11 +75,14 @@ def main():
     with col1:
         st.markdown(
             """
-            <div style="font-family: 'Orbitron', monospace; font-size: 1.25rem; font-weight: 700; color: #00d4ff; letter-spacing: 2px; margin-bottom: 8px;">
-                [ 01 // INGEST RESUME ]
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <div class="circle-shape" style="width: 16px; height: 16px; background: #D02020; border: 2px solid #121212;"></div>
+                <span style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 900; color: #121212; text-transform: uppercase; letter-spacing: 0.5px;">
+                    01 // RESUME SPECIFICATION
+                </span>
             </div>
-            <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #6b7280; margin-bottom: 12px;">
-                FEED PDF DATASTREAM FOR VECTOR TOKENIZATION
+            <div style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: #444444; margin-bottom: 12px;">
+                UPLOAD PDF ARTIFACT FOR VECTOR & KEYWORD EXTRACTION
             </div>
             """,
             unsafe_allow_html=True
@@ -92,11 +95,14 @@ def main():
         )
         st.markdown(
             """
-            <div style="margin-top: 30px; font-family: 'Orbitron', monospace; font-size: 1.05rem; font-weight: 700; color: #ff00ff; letter-spacing: 1.5px; margin-bottom: 6px;">
-                [ 02 // RELOCATION MOBILITY ]
+            <div style="margin-top: 26px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <div style="width: 14px; height: 14px; background: #F0C020; border: 2px solid #121212; transform: rotate(45deg);"></div>
+                <span style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 900; color: #121212; text-transform: uppercase; letter-spacing: 0.5px;">
+                    02 // RELOCATION MOBILITY
+                </span>
             </div>
-            <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #6b7280; margin-bottom: 8px;">
-                INDICATE PHYSICAL / REMOTE VECTOR AVAILABILITY
+            <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; color: #444444; margin-bottom: 8px;">
+                INDICATE PHYSICAL OR REMOTE AVAILABILITY
             </div>
             """,
             unsafe_allow_html=True
@@ -117,11 +123,14 @@ def main():
     with col2:
         st.markdown(
             """
-            <div style="font-family: 'Orbitron', monospace; font-size: 1.25rem; font-weight: 700; color: #00ff88; letter-spacing: 2px; margin-bottom: 8px;">
-                [ 03 // TARGET SPECIFICATION ]
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <div style="width: 16px; height: 16px; background: #1040C0; border: 2px solid #121212;"></div>
+                <span style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 900; color: #121212; text-transform: uppercase; letter-spacing: 0.5px;">
+                    03 // TARGET JOB SPECIFICATION
+                </span>
             </div>
-            <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #6b7280; margin-bottom: 12px;">
-                PASTE RAW JOB DESCRIPTION // EXTRACT COMPLIANCE MATRIX
+            <div style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: #444444; margin-bottom: 12px;">
+                PASTE RAW JOB DESCRIPTION TO EXTRACT COMPLIANCE CRITERIA
             </div>
             """,
             unsafe_allow_html=True
@@ -129,12 +138,12 @@ def main():
         job_description = st.text_area(
             "Paste the complete job description",
             height=140,
-            placeholder="> Paste target job posting specification (requirements, tech stack, qualifications)...",
+            placeholder="Paste target job posting specification (responsibilities, required skills, qualifications)...",
             label_visibility="collapsed"
         )
 
         st.markdown('<div style="margin-top: 25px;">', unsafe_allow_html=True)
-        analyze_button = st.button("⚡ EXECUTE NEURAL SCAN & MATCH", use_container_width=True)
+        analyze_button = st.button("■ EXECUTE ARCHITECTURAL SCAN & MATCH", use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
 
@@ -149,14 +158,14 @@ def main():
             st.warning("⚠️ Please paste the job description to continue")
             return
 
-        with st.spinner("⚡ INITIALIZING NEURAL MATRICES & EXECUTING SCAN..."):
+        with st.spinner("■ EXECUTING GEOMETRIC & VECTOR ANALYSIS..."):
 
             # Extract text
             try:
                 uploaded_file.seek(0)
                 resume_text = extract_text_from_pdf(uploaded_file)
             except Exception as e:
-                st.error(f"❌ PDF_STREAM_CORRUPTION: {str(e)}")
+                st.error(f"❌ PDF_EXTRACTION_ERROR: {str(e)}")
                 return
 
             if not resume_text:
@@ -185,13 +194,13 @@ def main():
                         st.session_state.user_email,
                         file_size=file_size
                     )
-                    st.success("✅ PAYLOAD ARCHIVED // S3 ENCRYPTED VAULT SYNCED")
+                    st.success("✅ RESUME ARCHIVED // S3 STORAGE SYNCED")
                 except Exception as e:
-                    st.warning(f"⚠️ VAULT_UPLOAD_BYPASS: {str(e)}")
+                    st.warning(f"⚠️ S3_STORAGE_BYPASS: {str(e)}")
 
             st.info(
-                "ℹ️ TELEMETRY_NOTE: Visual or multi-column PDFs can introduce OCR artifacts. "
-                "Semantic neural fallbacks were deployed."
+                "ℹ️ NOTE: Complex visual formatting can impair ATS algorithmic parsing. "
+                "Plain constructivist layouts maximize parsing fidelity."
             )
 
             # Auto-scroll
@@ -207,27 +216,39 @@ def main():
             # ── Results ──────────────────────────────────────────────────────
             st.markdown("---")
             st.markdown("""
-            <div style="margin-top: 15px; margin-bottom: 20px;">
-                <div style="font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #00d4ff; letter-spacing: 3px;">
-                    // TELEMETRY READOUT // SCAN COMPLETE //
+            <div style="margin-top: 15px; margin-bottom: 22px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                    <div class="circle-shape" style="width: 12px; height: 12px; background: #D02020; border: 2px solid #121212;"></div>
+                    <span style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 800; color: #121212; letter-spacing: 2px; text-transform: uppercase;">
+                        ANALYSIS COMPLETE // VERIFICATION MATRIX
+                    </span>
                 </div>
-                <h2 style="font-family: 'Orbitron', monospace; font-size: 2.2rem; color: #ffffff; letter-spacing: 3px; margin: 4px 0 0 0;">
-                    📈 RESUME COMPLIANCE MATRIX
+                <h2 style="font-size: 2.6rem; color: #121212; letter-spacing: -1px; margin: 0; font-weight: 900;">
+                    RESUME COMPLIANCE MATRIX
                 </h2>
             </div>
             """, unsafe_allow_html=True)
 
-            col1, col2 = st.columns(2)
+            col1, col2 = st.columns(2, gap="large")
             with col1:
-                st.markdown('<div class="score-label">Current ATS Vector Match</div>', unsafe_allow_html=True)
-                st.metric("", f"{similarity_score:.1f}%")
+                st.markdown("""
+                <div style="background: #FFFFFF; border: 4px solid #121212; box-shadow: 6px 6px 0px 0px #121212; padding: 18px 24px; margin-bottom: 16px;">
+                """, unsafe_allow_html=True)
+                st.metric("Current ATS Vector Match", f"{similarity_score:.1f}%")
+                st.markdown('</div>', unsafe_allow_html=True)
             with col2:
-                st.markdown('<div class="score-label">Optimized Potential After Fixes</div>', unsafe_allow_html=True)
-                st.metric("", f"{expected_score:.1f}%", delta=f"+{potential_gain:.1f}%", delta_color="normal")
+                st.markdown("""
+                <div style="background: #FFFFFF; border: 4px solid #121212; box-shadow: 6px 6px 0px 0px #121212; padding: 18px 24px; margin-bottom: 16px;">
+                """, unsafe_allow_html=True)
+                st.metric("Optimized Potential After Fixes", f"{expected_score:.1f}%", delta=f"+{potential_gain:.1f}%", delta_color="normal")
+                st.markdown('</div>', unsafe_allow_html=True)
 
             st.markdown("""
-            <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #00ff88; letter-spacing: 1.5px; margin-top: 25px; margin-bottom: 8px;">
-                // SECTION-BY-SECTION TRAJECTORY ANALYSIS
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 28px; margin-bottom: 10px;">
+                <div style="width: 14px; height: 14px; background: #1040C0; border: 2px solid #121212;"></div>
+                <span style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 900; color: #121212; text-transform: uppercase; letter-spacing: 0.5px;">
+                    SECTOR-BY-SECTOR TRAJECTORY AUDIT
+                </span>
             </div>
             """, unsafe_allow_html=True)
             fig = create_section_impact_chart(sections)
@@ -237,13 +258,16 @@ def main():
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("---")
             st.markdown("""
-            <div style="margin-top: 10px; margin-bottom: 20px;">
-                <h2 style="font-family: 'Orbitron', monospace; font-size: 1.8rem; color: #ffffff; letter-spacing: 2px; margin: 0;">
-                    🔍 SECTOR-BY-SECTOR DIAGNOSTIC
-                </h2>
-                <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #6b7280; letter-spacing: 1.5px; margin-top: 4px;">
-                    // GRANULAR COMPONENT AUDIT OF RESUME DEFICITS &amp; HIGH-VALUE TARGETS
+            <div style="margin-top: 10px; margin-bottom: 22px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                    <div style="width: 14px; height: 14px; background: #F0C020; border: 2px solid #121212; transform: rotate(45deg);"></div>
+                    <span style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 800; color: #121212; letter-spacing: 2px; text-transform: uppercase;">
+                        GRANULAR BREAKDOWN
+                    </span>
                 </div>
+                <h2 style="font-size: 2.2rem; color: #121212; letter-spacing: -1px; margin: 0; font-weight: 900;">
+                    ARCHITECTURAL COMPONENT DIAGNOSTIC
+                </h2>
             </div>
             """, unsafe_allow_html=True)
 

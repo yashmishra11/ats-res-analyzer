@@ -1,6 +1,7 @@
 """
 Admin Dashboard
-Statistics, upload history, and system controls
+Bauhaus Design System Implementation
+Statistics, upload history, and system controls with constructivist aesthetic
 """
 
 import streamlit as st
@@ -17,27 +18,34 @@ import pandas as pd
 
 
 def render_admin_dashboard():
-    """Render the admin dashboard"""
+    """Render the admin dashboard with Bauhaus constructivist aesthetic"""
     
     st.markdown("""
-    <div style="padding: 10px 0 15px 0;">
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #ff00ff; letter-spacing: 3px;">
-            // PRIVILEGED TELEMETRY // ROOT_CONSOLE //
+    <div style="padding: 20px 0 16px 0; border-bottom: 4px solid #121212; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <div class="circle-shape" style="width: 20px; height: 20px; background: #D02020; border: 2px solid #121212;"></div>
+            <div style="width: 18px; height: 18px; background: #1040C0; border: 2px solid #121212;"></div>
+            <div style="width: 18px; height: 18px; background: #F0C020; border: 2px solid #121212; transform: rotate(45deg);"></div>
+            <span style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 800; color: #121212; letter-spacing: 2.5px; text-transform: uppercase;">
+                ROOT TELEMETRY // SYSTEM ADMIN
+            </span>
         </div>
-        <h2 style="font-family: 'Orbitron', monospace; font-size: 2.2rem; color: #ffffff; letter-spacing: 2.5px; margin: 4px 0 0 0;">
-            ⚙️ SYSTEM TELEMETRY &amp; UPLOAD CONTROLS
-        </h2>
+        <h1 style="font-size: 3.2rem; color: #121212; letter-spacing: -1px; margin: 0; font-weight: 900; line-height: 1;">
+            ADMINISTRATIVE CONSOLE
+        </h1>
+        <div style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #555555; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px;">
+            Cloud Ingestion Pipeline, Performance Indices &amp; Resume Archive
+        </div>
     </div>
     """, unsafe_allow_html=True)
-    st.markdown("---")
     
     # Top controls
     col1, col2, col3 = st.columns([2, 2, 1])
     
     with col1:
         st.markdown("""
-        <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #00d4ff; letter-spacing: 1px;">
-            📊 TELEMETRY OVERVIEW
+        <div style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 900; color: #121212; text-transform: uppercase; letter-spacing: 0.5px;">
+            ■ TELEMETRY OVERVIEW
         </div>
         """, unsafe_allow_html=True)
     
@@ -48,8 +56,8 @@ def render_admin_dashboard():
     
     # System Control Toggle
     st.markdown("""
-    <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #00ff88; letter-spacing: 1px; margin-top: 15px;">
-        ⚙️ CLOUD STORAGE PIPELINE (NO MORE UPPY)
+    <div style="font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800; color: #121212; letter-spacing: 0.5px; margin-top: 20px; text-transform: uppercase;">
+        ● CLOUD STORAGE INGESTION PIPELINE
     </div>
     """, unsafe_allow_html=True)
     
@@ -73,15 +81,15 @@ def render_admin_dashboard():
     
     if not new_upload_status:
         st.markdown("""
-        <div style="background: rgba(255, 51, 102, 0.08); border-left: 4px solid #ff3366; padding: 12px 16px; margin: 10px 0; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #ff3366; box-shadow: 0 0 12px rgba(255, 51, 102, 0.2);">
-            ⚠️ <strong>NO MORE UPPY PROTOCOL ENGAGED:</strong><br>
+        <div style="background: #F0C020; border: 4px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 18px; margin: 12px 0; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: #121212;">
+            ▲ <strong>NO MORE UPPY PROTOCOL ENGAGED:</strong><br>
             S3 cloud storage pipeline is offline. Resumes can still be analyzed in volatile memory, but persistent uploads to AWS S3 are blocked to conserve budget.
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown("""
-        <div style="background: rgba(0, 255, 136, 0.08); border-left: 4px solid #00ff88; padding: 12px 16px; margin: 10px 0; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #00ff88; box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);">
-            ✅ <strong>S3 UPLOADS ENGAGED:</strong> Resumes are automatically persisted to AWS S3 encrypted bucket.
+        <div style="background: #FFFFFF; border: 4px solid #121212; border-left: 12px solid #1040C0; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 18px; margin: 12px 0; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #121212;">
+            ■ <strong>S3 UPLOADS ENGAGED:</strong> Resumes are automatically persisted to AWS S3 encrypted bucket.
         </div>
         """, unsafe_allow_html=True)
     
@@ -89,7 +97,7 @@ def render_admin_dashboard():
     
     # Time range selector
     st.markdown("""
-    <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #00d4ff; letter-spacing: 1px; margin-bottom: 8px;">
+    <div style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 900; color: #121212; letter-spacing: 0.5px; margin-bottom: 8px; text-transform: uppercase;">
         📅 TELEMETRY WINDOW SELECTION
     </div>
     """, unsafe_allow_html=True)
@@ -121,49 +129,65 @@ def render_admin_dashboard():
     
     # Display key metrics
     st.markdown("""
-    <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #ffffff; letter-spacing: 1.5px; margin-top: 15px; margin-bottom: 12px;">
-        📈 KEY TELEMETRY COEFFICIENTS
+    <div style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 900; color: #121212; letter-spacing: 0.5px; margin-top: 20px; margin-bottom: 14px; text-transform: uppercase;">
+        📈 KEY TELEMETRY INDICES
     </div>
     """, unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.markdown('<div class="score-label">Total Ingestions</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="background: #FFFFFF; border: 4px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 18px;">
+            <div class="score-label">Total Uploads</div>
+        """, unsafe_allow_html=True)
         st.metric(
             "",
             stats['total_uploads'],
             delta=f"+{stats['recent_uploads']}" if stats['recent_uploads'] > 0 else None
         )
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
         avg_score = stats['average_score']
-        st.markdown('<div class="score-label">Avg Vector Match</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="background: #FFFFFF; border: 4px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 18px;">
+            <div class="score-label">Avg Match Score</div>
+        """, unsafe_allow_html=True)
         st.metric(
             "",
             f"{avg_score:.1f}%" if avg_score else "N/A"
         )
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col3:
         total_size_mb = stats['total_size_mb']
-        st.markdown('<div class="score-label">Vault Storage</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="background: #FFFFFF; border: 4px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 18px;">
+            <div class="score-label">Vault Storage</div>
+        """, unsafe_allow_html=True)
         st.metric(
             "",
             f"{total_size_mb:.2f} MB"
         )
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col4:
-        st.markdown('<div class="score-label">Active Node Users</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="background: #FFFFFF; border: 4px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 18px;">
+            <div class="score-label">Active Users</div>
+        """, unsafe_allow_html=True)
         st.metric(
             "",
             stats['unique_users']
         )
+        st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
     # Upload timeline chart
     st.markdown("""
-    <div style="font-family: 'Orbitron', monospace; font-size: 1.15rem; color: #00d4ff; letter-spacing: 1px; margin-bottom: 12px;">
+    <div style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 900; color: #121212; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">
         📊 INGESTION VELOCITY TIMELINE
     </div>
     """, unsafe_allow_html=True)
@@ -195,19 +219,19 @@ def render_admin_dashboard():
         
         upload_counts = df.groupby('period').size()
         
-        # Create chart with Cyberpunk theme
+        # Create chart with Bauhaus theme
         fig, ax = plt.subplots(figsize=(12, 5))
-        fig.patch.set_facecolor('#0a0a0f')
-        ax.set_facecolor('#0a0a0f')
+        fig.patch.set_facecolor('#F0F0F0')
+        ax.set_facecolor('#FFFFFF')
         
         x_indices = list(range(len(upload_counts)))
         ax.bar(
             x_indices,
             upload_counts.values,
-            color="#00ff88",
-            edgecolor="#00ff88",
-            linewidth=1.2,
-            alpha=0.85
+            color="#1040C0",
+            edgecolor="#121212",
+            linewidth=2,
+            alpha=1.0
         )
         
         tick_labels = [p.strftime(tick_fmt) for p in upload_counts.index]
@@ -216,21 +240,23 @@ def render_admin_dashboard():
             tick_labels,
             rotation=35 if len(upload_counts) > 6 else 0,
             ha='right' if len(upload_counts) > 6 else 'center',
-            color='#00d4ff',
-            fontweight='bold',
-            fontsize=9
+            color='#121212',
+            fontweight='heavy',
+            fontsize=9.5
         )
         
-        ax.set_xlabel(xlabel, color='#6b7280', fontsize=10)
-        ax.set_ylabel('INGESTIONS COUNT', color='#6b7280', fontsize=10)
-        ax.tick_params(colors='#6b7280')
-        ax.grid(axis='y', alpha=0.25, color='#2a2a3a', linestyle='--')
+        ax.set_xlabel(xlabel, color='#121212', fontsize=11, fontweight='heavy')
+        ax.set_ylabel('INGESTIONS COUNT', color='#121212', fontsize=11, fontweight='heavy')
+        ax.tick_params(colors='#121212', width=2)
+        ax.grid(axis='y', alpha=0.18, color='#121212', linestyle='--')
         
         # Style spines
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_color('#2a2a3a')
-        ax.spines['bottom'].set_color('#2a2a3a')
+        ax.spines['left'].set_color('#121212')
+        ax.spines['left'].set_linewidth(2.5)
+        ax.spines['bottom'].set_color('#121212')
+        ax.spines['bottom'].set_linewidth(2.5)
         
         plt.tight_layout()
         st.pyplot(fig)
@@ -241,7 +267,11 @@ def render_admin_dashboard():
     st.markdown("---")
     
     # Recent uploads table
-    st.markdown("### 📋 Recent Uploads")
+    st.markdown("""
+    <div style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 900; color: #121212; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">
+        📋 RECENT UPLOADS ARCHIVE
+    </div>
+    """, unsafe_allow_html=True)
     
     if resumes:
         # Create table data
@@ -282,7 +312,11 @@ def render_admin_dashboard():
                 )
         
         # View/Download individual resumes
-        st.markdown("### 🔍 View Individual Resume")
+        st.markdown("""
+        <div style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; color: #121212; letter-spacing: 0.5px; margin-top: 20px; margin-bottom: 8px; text-transform: uppercase;">
+            🔍 VIEW ARTIFACT DETAILS
+        </div>
+        """, unsafe_allow_html=True)
         
         selected_resume = st.selectbox(
             "Select a resume to view",
@@ -301,12 +335,14 @@ def render_admin_dashboard():
             
             with col1:
                 st.markdown(f"""
-                **Filename:** {resume['filename']}  
-                **Upload Date:** {pd.to_datetime(resume['uploaded_at']).strftime('%Y-%m-%d %H:%M:%S')}  
-                **File Size:** {file_sz / 1024:.1f} KB  
-                **Match Score:** {score_str} (if analyzed)  
-                **User:** {user_str}
-                """)
+                <div style="background: #FFFFFF; border: 3px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 16px;">
+                    <strong>Filename:</strong> {resume['filename']}<br>
+                    <strong>Upload Date:</strong> {pd.to_datetime(resume['uploaded_at']).strftime('%Y-%m-%d %H:%M:%S')}<br>
+                    <strong>File Size:</strong> {file_sz / 1024:.1f} KB<br>
+                    <strong>Match Score:</strong> {score_str}<br>
+                    <strong>User:</strong> {user_str}
+                </div>
+                """, unsafe_allow_html=True)
             
             with col2:
                 if st.button("🔗 Open S3 URL", use_container_width=True):
@@ -320,30 +356,30 @@ def render_admin_dashboard():
 
 
 def render_admin_stats_widget():
-    """Render a compact admin stats widget for sidebar with Cyberpunk styling"""
+    """Render a compact admin stats widget for sidebar with Bauhaus styling"""
     st.sidebar.markdown("---")
     st.sidebar.markdown("""
-    <div style="font-family: 'Orbitron', monospace; font-size: 13px; color: #00d4ff; letter-spacing: 1.5px; margin-bottom: 8px;">
-        // ROOT TELEMETRY MINI-HUD
+    <div style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 900; color: #121212; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">
+        ROOT TELEMETRY WIDGET
     </div>
     """, unsafe_allow_html=True)
     
     stats = get_upload_stats(start_time=datetime.now() - timedelta(days=1))
     
     st.sidebar.metric("Today's Ingestions", stats['recent_uploads'])
-    st.sidebar.metric("Total Vault Ingestions", stats['total_uploads'])
+    st.sidebar.metric("Total Ingestions", stats['total_uploads'])
     
     # Upload status indicator
     settings = get_system_settings()
     if settings.get('uploads_enabled', True):
         st.sidebar.markdown("""
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #00ff88; border: 1px solid #00ff88; padding: 6px 10px; margin-top: 8px; box-shadow: 0 0 8px rgba(0, 255, 136, 0.3);">
-            [✓ PIPELINE ACTIVE] S3: ON
+        <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; color: #FFFFFF; background: #1040C0; border: 2px solid #121212; box-shadow: 2px 2px 0px 0px #121212; padding: 6px 10px; margin-top: 8px; text-transform: uppercase;">
+            ● PIPELINE ACTIVE // S3: ON
         </div>
         """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("""
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #ff3366; border: 1px solid #ff3366; padding: 6px 10px; margin-top: 8px; box-shadow: 0 0 8px rgba(255, 51, 102, 0.3);">
-            [🔒 NO MORE UPPY] S3: OFF
+        <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; color: #121212; background: #F0C020; border: 2px solid #121212; box-shadow: 2px 2px 0px 0px #121212; padding: 6px 10px; margin-top: 8px; text-transform: uppercase;">
+            ▲ NO MORE UPPY // S3: OFF
         </div>
         """, unsafe_allow_html=True)

@@ -1,7 +1,9 @@
 """
 UI Components for ATS Resume Analyzer
-Cyberpunk / Glitch Design System Implementation
-High-tech, low-life aesthetic: Void black, neon glow, scanlines, chamfered HUD panels.
+Bauhaus Design System Implementation
+Form follows function: Geometric purity, constructivist typography,
+hard offset shadows, stark black borders, and primary color blocking
+(Bauhaus Red #D02020, Bauhaus Blue #1040C0, Bauhaus Yellow #F0C020).
 """
 
 import streamlit as st
@@ -9,428 +11,421 @@ import re
 from config import (
     APP_TITLE, APP_ICON, APP_VERSION,
     BACKGROUND_COLOR, CARD_COLOR, ACCENT_COLOR, ACCENT_SECONDARY, ACCENT_TERTIARY,
-    BORDER_COLOR, DESTRUCTIVE_COLOR, WARNING_COLOR
+    BORDER_COLOR, DESTRUCTIVE_COLOR, WARNING_COLOR,
+    BAUHAUS_RED, BAUHAUS_BLUE, BAUHAUS_YELLOW, BAUHAUS_BLACK, BAUHAUS_WHITE
 )
 
 
 def apply_custom_css():
-    """Apply the Cyberpunk / Glitch Design System CSS to Streamlit"""
+    """Apply the Bauhaus Design System CSS to Streamlit"""
     st.markdown(f"""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;700;800;900&family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&display=swap');
 
-        /* ── Design Tokens ────────────────────────────────────────── */
+        /* ── Bauhaus Design Tokens ────────────────────────────────── */
         :root {{
-            --cyber-bg: #0a0a0f;
-            --cyber-card: #12121a;
-            --cyber-muted: #1c1c2e;
-            --cyber-fg: #e0e0e0;
-            --cyber-muted-fg: #6b7280;
-            --neon-green: #00ff88;
-            --neon-magenta: #ff00ff;
-            --neon-cyan: #00d4ff;
-            --neon-red: #ff3366;
-            --neon-amber: #ffa500;
-            --cyber-border: #2a2a3a;
-            --font-head: 'Orbitron', monospace;
-            --font-tech: 'Share Tech Mono', monospace;
-            --font-body: 'JetBrains Mono', monospace;
+            --bauhaus-bg: #F0F0F0;
+            --bauhaus-fg: #121212;
+            --bauhaus-card: #FFFFFF;
+            --bauhaus-muted: #E0E0E0;
+            --bauhaus-red: #D02020;
+            --bauhaus-blue: #1040C0;
+            --bauhaus-yellow: #F0C020;
+            --bauhaus-black: #121212;
+            --bauhaus-white: #FFFFFF;
+            --bauhaus-border: #121212;
+            --font-outfit: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
         }}
 
-        /* ── CRT Scanlines Overlay ────────────────────────────────── */
-        .stApp::before {{
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 0, 0, 0.28) 2px,
-                rgba(0, 0, 0, 0.28) 4px
-            );
-            pointer-events: none;
-            z-index: 999999;
-            opacity: 0.65;
-        }}
-
-        /* ── Base App & Background Circuit Grid ───────────────────── */
+        /* ── Canvas & Dot Grid Texture ───────────────────────────── */
         .stApp, .main {{
-            background-color: var(--cyber-bg) !important;
-            background-image: 
-                linear-gradient(rgba(0, 255, 136, 0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 136, 0.035) 1px, transparent 1px) !important;
-            background-size: 40px 40px !important;
-            font-family: var(--font-body) !important;
-            color: var(--cyber-fg) !important;
+            background-color: var(--bauhaus-bg) !important;
+            background-image: radial-gradient(rgba(18, 18, 18, 0.08) 1.5px, transparent 1.5px) !important;
+            background-size: 24px 24px !important;
+            font-family: var(--font-outfit) !important;
+            color: var(--bauhaus-fg) !important;
         }}
 
-        /* ── Typography & Headers ─────────────────────────────────── */
+        /* ── Constructivist Typography ────────────────────────────── */
         h1, h2, h3, h4, h5, h6 {{
-            font-family: var(--font-head) !important;
+            font-family: var(--font-outfit) !important;
             text-transform: uppercase !important;
-            letter-spacing: 2px !important;
-            color: #ffffff !important;
+            font-weight: 900 !important;
+            letter-spacing: -0.5px !important;
+            color: var(--bauhaus-fg) !important;
+            line-height: 1.05 !important;
         }}
 
         p, span, label, div {{
-            font-family: var(--font-body);
+            font-family: var(--font-outfit) !important;
+            color: var(--bauhaus-fg);
         }}
 
-        /* ── Glitch Animation & Effects ───────────────────────────── */
-        @keyframes cyberGlitch {{
-            0%, 100% {{ transform: translate(0); }}
-            10% {{ transform: translate(-2px, 1px); }}
-            20% {{ transform: translate(2px, -1px); }}
-            30% {{ transform: translate(-1px, -1px); }}
-            40% {{ transform: translate(1px, 2px); }}
-            50% {{ transform: translate(-1px, 1px); }}
+        /* ── Hard Offset Shadows & Sharp Edges ────────────────────── */
+        *, *::before, *::after {{
+            border-radius: 0px !important;
         }}
 
-        @keyframes rgbShiftPulse {{
-            0%, 100% {{
-                text-shadow: -2px 0 var(--neon-magenta), 2px 0 var(--neon-cyan), 0 0 12px rgba(0, 255, 136, 0.5);
-            }}
-            50% {{
-                text-shadow: 2px 0 var(--neon-magenta), -2px 0 var(--neon-cyan), 0 0 20px rgba(0, 255, 136, 0.7);
-            }}
+        /* Allow rounded-full for deliberate geometric circles */
+        .circle-shape, .rounded-full {{
+            border-radius: 9999px !important;
         }}
 
-        @keyframes blinkCursor {{
-            0%, 100% {{ opacity: 1; }}
-            50% {{ opacity: 0; }}
-        }}
-
-        @keyframes neonPulseGlow {{
-            0%, 100% {{
-                box-shadow: 0 0 6px var(--neon-green), 0 0 15px rgba(0, 255, 136, 0.3);
-            }}
-            50% {{
-                box-shadow: 0 0 12px var(--neon-green), 0 0 25px rgba(0, 255, 136, 0.6);
-            }}
-        }}
-
-        .cyber-glitch {{
-            animation: cyberGlitch 3s infinite alternate-reverse, rgbShiftPulse 2.5s infinite;
-        }}
-
-        .cyber-cursor {{
-            display: inline-block;
-            width: 8px;
-            height: 1.1em;
-            background: var(--neon-green);
-            vertical-align: middle;
-            margin-left: 4px;
-            animation: blinkCursor 0.8s step-end infinite;
-            box-shadow: 0 0 8px var(--neon-green);
-        }}
-
-        /* ── Metric Display (HUD Stats) ───────────────────────────── */
+        /* ── Streamlit Metric Display ─────────────────────────────── */
         [data-testid="stMetricValue"] {{
-            font-family: var(--font-head) !important;
-            font-size: 2.8rem !important;
+            font-family: var(--font-outfit) !important;
+            font-size: 3.2rem !important;
             font-weight: 900 !important;
-            color: var(--neon-green) !important;
-            text-shadow: 0 0 12px rgba(0, 255, 136, 0.6) !important;
-            letter-spacing: 1px !important;
+            color: var(--bauhaus-fg) !important;
+            letter-spacing: -1px !important;
+            line-height: 1 !important;
+        }}
+
+        [data-testid="stMetricLabel"],
+        [data-testid="stMetricLabel"] p,
+        [data-testid="stMetricLabel"] span {{
+            font-family: var(--font-outfit) !important;
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            color: var(--bauhaus-fg) !important;
+            letter-spacing: 1.5px !important;
+            text-transform: uppercase !important;
         }}
 
         [data-testid="stMetricDelta"] {{
-            font-family: var(--font-tech) !important;
-            font-weight: 700 !important;
-            letter-spacing: 1px !important;
+            font-family: var(--font-outfit) !important;
+            font-weight: 800 !important;
+            font-size: 1rem !important;
         }}
 
         .score-label {{
-            font-family: var(--font-tech);
+            font-family: var(--font-outfit);
             font-size: 13px;
-            color: var(--neon-cyan);
+            font-weight: 800;
+            color: var(--bauhaus-fg);
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }}
 
         .score-label::before {{
-            content: ">>";
-            color: var(--neon-green);
-            font-weight: bold;
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--bauhaus-red);
         }}
 
-        /* ── Inputs & Textareas (Terminal Prompt) ──────────────────── */
+        /* ── Inputs & Textareas ───────────────────────────────────── */
         .stTextInput>div>div>input, 
         .stTextArea textarea {{
-            background-color: var(--cyber-card) !important;
-            color: var(--neon-green) !important;
-            font-family: var(--font-tech) !important;
-            font-size: 14px !important;
-            border: 1px solid var(--cyber-border) !important;
-            border-radius: 0px !important;
-            clip-path: polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px)) !important;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            background-color: var(--bauhaus-white) !important;
+            color: var(--bauhaus-fg) !important;
+            font-family: var(--font-outfit) !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            border: 3px solid var(--bauhaus-border) !important;
+            box-shadow: 4px 4px 0px 0px var(--bauhaus-border) !important;
+            padding: 12px 14px !important;
+            transition: all 0.15s ease !important;
         }}
 
         .stTextInput>div>div>input:focus, 
         .stTextArea textarea:focus {{
-            border-color: var(--neon-green) !important;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4), inset 0 0 5px rgba(0, 255, 136, 0.2) !important;
+            border-color: var(--bauhaus-blue) !important;
+            box-shadow: 4px 4px 0px 0px var(--bauhaus-blue) !important;
             outline: none !important;
         }}
 
         /* ── File Uploader ────────────────────────────────────────── */
         [data-testid="stFileUploader"] {{
-            background: var(--cyber-card);
-            border: 1px dashed rgba(0, 255, 136, 0.4);
-            padding: 16px;
-            clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
-            transition: border 0.3s;
+            background: var(--bauhaus-white) !important;
+            border: 3px dashed var(--bauhaus-border) !important;
+            box-shadow: 6px 6px 0px 0px var(--bauhaus-border) !important;
+            padding: 20px !important;
+            transition: all 0.2s ease !important;
         }}
 
         [data-testid="stFileUploader"]:hover {{
-            border-color: var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
+            border-color: var(--bauhaus-red) !important;
+            box-shadow: 8px 8px 0px 0px var(--bauhaus-red) !important;
+            transform: translateY(-2px);
         }}
 
-        /* ── Cyberpunk Buttons ────────────────────────────────────── */
+        /* ── Buttons (Bauhaus Physical Press) ─────────────────────── */
         .stButton>button {{
-            background: transparent !important;
-            color: var(--neon-green) !important;
-            font-family: var(--font-tech) !important;
+            background-color: var(--bauhaus-red) !important;
+            color: var(--bauhaus-white) !important;
+            font-family: var(--font-outfit) !important;
             font-size: 15px !important;
-            font-weight: 700 !important;
+            font-weight: 800 !important;
             text-transform: uppercase !important;
-            letter-spacing: 2px !important;
-            border: 1.5px solid var(--neon-green) !important;
-            border-radius: 0px !important;
-            clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px)) !important;
-            padding: 12px 24px !important;
-            box-shadow: 0 0 8px rgba(0, 255, 136, 0.25) !important;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            letter-spacing: 1.5px !important;
+            border: 3px solid var(--bauhaus-border) !important;
+            box-shadow: 4px 4px 0px 0px var(--bauhaus-border) !important;
+            padding: 14px 28px !important;
+            transition: all 0.15s ease-out !important;
         }}
 
         .stButton>button:hover {{
-            background: var(--neon-green) !important;
-            color: #0a0a0f !important;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.8), 0 0 35px rgba(0, 255, 136, 0.4) !important;
-            transform: translateY(-1px);
+            background-color: #b51a1a !important;
+            color: var(--bauhaus-white) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 6px 6px 0px 0px var(--bauhaus-border) !important;
         }}
 
         .stButton>button:active {{
-            transform: translateY(1px);
-            box-shadow: 0 0 5px rgba(0, 255, 136, 0.9) !important;
+            transform: translate(2px, 2px) !important;
+            box-shadow: 0px 0px 0px 0px var(--bauhaus-border) !important;
         }}
 
-        /* Secondary Button (Admin Toggle / Alt Actions) */
-        .cyber-btn-secondary {{
-            border-color: var(--neon-magenta) !important;
-            color: var(--neon-magenta) !important;
-            box-shadow: 0 0 8px rgba(255, 0, 255, 0.3) !important;
-        }}
-
-        .cyber-btn-secondary:hover {{
-            background: var(--neon-magenta) !important;
-            color: #0a0a0f !important;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.8) !important;
-        }}
-
-        /* ── Cyber Section Cards (Chamfered HUD) ──────────────────── */
+        /* ── Bauhaus Cards ────────────────────────────────────────── */
         .section-card {{
-            background-color: var(--cyber-card) !important;
-            border: 1px solid var(--cyber-border) !important;
-            clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));
-            padding: 22px !important;
-            margin: 18px 0 !important;
-            position: relative;
-            transition: all 0.25s ease;
+            background-color: var(--bauhaus-white) !important;
+            border: 4px solid var(--bauhaus-border) !important;
+            box-shadow: 8px 8px 0px 0px var(--bauhaus-border) !important;
+            padding: 24px !important;
+            margin: 22px 0 !important;
+            position: relative !important;
+            transition: transform 0.2s ease-out !important;
         }}
 
         .section-card:hover {{
             transform: translateY(-2px);
-            box-shadow: 0 0 18px rgba(0, 255, 136, 0.15);
         }}
 
-        /* Chamfer Card Status Indicators */
+        /* Color-blocked status edges */
         .card-good {{
-            border-left: 4px solid var(--neon-green) !important;
-            box-shadow: -4px 0 12px rgba(0, 255, 136, 0.3);
+            border-left: 14px solid var(--bauhaus-blue) !important;
         }}
 
         .card-weak {{
-            border-left: 4px solid var(--neon-amber) !important;
-            box-shadow: -4px 0 12px rgba(255, 165, 0, 0.3);
+            border-left: 14px solid var(--bauhaus-yellow) !important;
         }}
 
         .card-missing {{
-            border-left: 4px solid var(--neon-red) !important;
-            box-shadow: -4px 0 12px rgba(255, 51, 102, 0.3);
+            border-left: 14px solid var(--bauhaus-red) !important;
         }}
 
         /* Status Badges */
         .status-badge {{
-            font-family: var(--font-tech);
+            font-family: var(--font-outfit);
             font-size: 12px;
-            font-weight: 700;
-            padding: 4px 10px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }}
-
-        .badge-good {{
-            color: var(--neon-green);
-            border: 1px solid var(--neon-green);
-            background: rgba(0, 255, 136, 0.08);
-            box-shadow: 0 0 8px rgba(0, 255, 136, 0.35);
-        }}
-
-        .badge-weak {{
-            color: var(--neon-amber);
-            border: 1px solid var(--neon-amber);
-            background: rgba(255, 165, 0, 0.08);
-            box-shadow: 0 0 8px rgba(255, 165, 0, 0.35);
-        }}
-
-        .badge-missing {{
-            color: var(--neon-red);
-            border: 1px solid var(--neon-red);
-            background: rgba(255, 51, 102, 0.08);
-            box-shadow: 0 0 8px rgba(255, 51, 102, 0.35);
-        }}
-
-        /* Terminal Diagnostic Block */
-        .diag-box {{
-            background-color: #0b0b13;
-            border: 1px solid rgba(0, 212, 255, 0.25);
-            padding: 14px;
-            margin-top: 12px;
-            font-family: var(--font-tech);
-        }}
-
-        .diag-title {{
-            color: var(--neon-cyan);
-            font-size: 12px;
-            text-transform: uppercase;
+            font-weight: 800;
+            padding: 5px 12px;
             letter-spacing: 1.5px;
-            margin-bottom: 6px;
-            display: flex;
+            text-transform: uppercase;
+            border: 2px solid var(--bauhaus-border);
+            box-shadow: 3px 3px 0px 0px var(--bauhaus-border);
+            display: inline-flex;
             align-items: center;
             gap: 6px;
         }}
 
+        .badge-good {{
+            color: #FFFFFF;
+            background-color: var(--bauhaus-blue);
+        }}
+
+        .badge-weak {{
+            color: #121212;
+            background-color: var(--bauhaus-yellow);
+        }}
+
+        .badge-missing {{
+            color: #FFFFFF;
+            background-color: var(--bauhaus-red);
+        }}
+
+        /* Diagnostic Box */
+        .diag-box {{
+            background-color: #FAF8F5;
+            border: 2px solid var(--bauhaus-border);
+            padding: 16px;
+            margin-top: 14px;
+        }}
+
+        .diag-title {{
+            font-family: var(--font-outfit);
+            color: var(--bauhaus-fg);
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+
         .diag-text {{
-            color: #d1d5db;
-            font-size: 13.5px;
+            font-family: var(--font-outfit);
+            color: #222222;
+            font-size: 14px;
+            font-weight: 500;
             line-height: 1.6;
             margin: 0;
         }}
 
         .diag-text strong {{
-            color: var(--neon-green) !important;
-            font-weight: 700 !important;
-            text-shadow: 0 0 6px rgba(0, 255, 136, 0.5) !important;
+            color: var(--bauhaus-fg) !important;
+            font-weight: 800 !important;
+            background: var(--bauhaus-yellow);
+            padding: 1px 4px;
         }}
 
-        /* ── Sidebar Cyber Styling ────────────────────────────────── */
+        /* ── Sidebar Bauhaus Styling ──────────────────────────────── */
         [data-testid="stSidebar"] {{
-            background-color: #0d0d14 !important;
-            border-right: 1px solid var(--cyber-border) !important;
+            background-color: #E6E6E6 !important;
+            border-right: 4px solid var(--bauhaus-border) !important;
         }}
 
         [data-testid="stSidebar"] h1, 
         [data-testid="stSidebar"] h2, 
         [data-testid="stSidebar"] h3 {{
-            color: var(--neon-cyan) !important;
+            color: var(--bauhaus-fg) !important;
         }}
 
-        /* Alerts & Infoboxes */
+        /* Alerts */
         .stAlert {{
-            background-color: var(--cyber-card) !important;
-            border: 1px solid var(--neon-cyan) !important;
-            color: var(--cyber-fg) !important;
-            font-family: var(--font-tech) !important;
+            background-color: var(--bauhaus-white) !important;
+            border: 3px solid var(--bauhaus-border) !important;
+            box-shadow: 4px 4px 0px 0px var(--bauhaus-border) !important;
+            color: var(--bauhaus-fg) !important;
+            font-weight: 600 !important;
         }}
 
         /* Radio Buttons */
         [data-testid="stRadio"] label {{
-            font-family: var(--font-tech) !important;
-            color: var(--cyber-fg) !important;
+            font-family: var(--font-outfit) !important;
+            font-weight: 600 !important;
+            color: var(--bauhaus-fg) !important;
         }}
 
         /* Horizontal Divider */
         hr {{
-            border-color: rgba(0, 255, 136, 0.18) !important;
-            box-shadow: 0 0 8px rgba(0, 255, 136, 0.1) !important;
+            border: none !important;
+            border-top: 4px solid var(--bauhaus-border) !important;
+            opacity: 1 !important;
+            margin: 28px 0 !important;
         }}
     </style>
     """, unsafe_allow_html=True)
 
 
 def render_header():
-    """Render the application header with cyberpunk styling"""
+    """Render the application header with pure Bauhaus constructivist aesthetic"""
     st.markdown(f"""
-    <div style="text-align: center; padding: 25px 0 15px 0;">
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #00d4ff; letter-spacing: 4px; margin-bottom: 6px;">
-            // NODE_CONNECTED: ATS_OPTIMIZER_CORE_v3.0 //
+    <div style="padding: 24px 0 16px 0; border-bottom: 4px solid #121212; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+            <!-- Left: Geometric Logo Mark & Title -->
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <!-- Circle (Red) -->
+                    <div class="circle-shape" style="width: 24px; height: 24px; background: #D02020; border: 3px solid #121212;"></div>
+                    <!-- Square (Blue) -->
+                    <div style="width: 22px; height: 22px; background: #1040C0; border: 3px solid #121212;"></div>
+                    <!-- Triangle (Yellow) -->
+                    <div style="width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-bottom: 24px solid #F0C020; filter: drop-shadow(0 0 0 #121212);"></div>
+                    <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 3px; color: #121212; text-transform: uppercase; margin-left: 6px;">
+                        BAUHAUS PROTOCOL // v{APP_VERSION}
+                    </span>
+                </div>
+                <h1 style="font-size: 3.6rem; margin: 0; font-weight: 900; letter-spacing: -1.5px; text-transform: uppercase; color: #121212; line-height: 0.95;">
+                    {APP_TITLE}
+                </h1>
+            </div>
+            <!-- Right: Constructivist Manifesto Block -->
+            <div style="background: #F0C020; border: 3px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 10px 18px; max-width: 320px;">
+                <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: #121212;">
+                    FORM FOLLOWS FUNCTION
+                </div>
+                <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; color: #121212; margin-top: 2px;">
+                    Architectural vector analysis for applicant tracking systems.
+                </div>
+            </div>
         </div>
-        <h1 class="cyber-glitch" style="font-size: 3.2rem; margin: 0; font-weight: 900; letter-spacing: 4px;">
-            {APP_ICON} {APP_TITLE}
-        </h1>
-        <div style="font-family: 'Share Tech Mono', monospace; color: #6b7280; font-size: 13px; letter-spacing: 2px; margin-top: 8px;">
-            [ NEURAL PARSER ] :: HEURISTIC RESUME-JOB COMPLIANCE ENGINE <span class="cyber-cursor"></span>
+        <!-- Color Strip Accent -->
+        <div style="display: flex; height: 8px; margin-top: 20px; border: 2px solid #121212;">
+            <div style="flex: 2; background: #D02020;"></div>
+            <div style="flex: 2; background: #1040C0;"></div>
+            <div style="flex: 1; background: #F0C020;"></div>
+            <div style="flex: 5; background: #121212;"></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
-    st.markdown("---")
 
 
 def render_sidebar():
-    """Render the sidebar with cyberpunk terminal aesthetics"""
+    """Render the sidebar with Bauhaus constructivist aesthetics"""
     with st.sidebar:
+        # Top Color-blocked Brand Panel
         st.markdown(f"""
-        <div style="border: 1px solid #00d4ff; padding: 12px; background: #12121a; margin-bottom: 20px;">
-            <div style="font-family: 'Orbitron', monospace; font-size: 14px; color: #00d4ff; font-weight: 700; letter-spacing: 1px;">
-                {APP_ICON} SYSTEM PROTOCOL
+        <div style="background: #1040C0; border: 4px solid #121212; box-shadow: 6px 6px 0px 0px #121212; padding: 18px; margin-bottom: 24px; color: #FFFFFF;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <div class="circle-shape" style="width: 14px; height: 14px; background: #F0C020; border: 2px solid #121212;"></div>
+                <span style="font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
+                    SYSTEM DESIGN
+                </span>
             </div>
-            <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #00ff88; margin-top: 6px;">
-                STATUS: ONLINE [v{APP_VERSION}]
+            <div style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; line-height: 1.1;">
+                BAUHAUS 1925
             </div>
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8e8e93; margin-top: 8px; line-height: 1.4;">
-                Advanced telemetry for bypassing corporate ATS algorithmic gatekeepers.
+            <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; margin-top: 8px; color: #E0E0E0; line-height: 1.4;">
+                Eliminate decorative clutter. Every resume element must serve algorithmic verification.
             </div>
         </div>
         """, unsafe_allow_html=True)
         
+        # Step-by-Step Architecture
         st.markdown("""
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #ff00ff; letter-spacing: 1.5px; margin-bottom: 8px;">
-            [ 01 // EXECUTION WORKFLOW ]
+        <div style="background: #FFFFFF; border: 3px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 16px; margin-bottom: 20px;">
+            <div style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: #121212; margin-bottom: 12px; border-bottom: 2px solid #121212; padding-bottom: 6px;">
+                EXECUTION PIPELINE
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="circle-shape" style="width: 22px; height: 22px; background: #D02020; color: #FFF; font-weight: 900; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid #121212;">1</div>
+                    <span style="font-weight: 700; font-size: 13px; text-transform: uppercase;">Upload PDF Resume</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 22px; height: 22px; background: #1040C0; color: #FFF; font-weight: 900; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid #121212;">2</div>
+                    <span style="font-weight: 700; font-size: 13px; text-transform: uppercase;">Paste Job Specs</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 22px; height: 22px; background: #F0C020; color: #121212; font-weight: 900; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid #121212; transform: rotate(45deg);"><span style="transform: rotate(-45deg);">3</span></div>
+                    <span style="font-weight: 700; font-size: 13px; text-transform: uppercase;">Vector Cosine Match</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 22px; height: 22px; background: #121212; color: #FFF; font-weight: 900; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid #121212;">4</div>
+                    <span style="font-weight: 700; font-size: 13px; text-transform: uppercase;">Remedy Deficits</span>
+                </div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
-        st.markdown("""
-        `> STEP 1:` **FEED RESUME** (PDF Stream)  
-        `> STEP 2:` **INGEST TARGET JD** (Job Posting)  
-        `> STEP 3:` **TRIGGER VECTOR SCAN** (Cosine / Match)  
-        `> STEP 4:` **OPTIMIZE DEFICITS** (Recommendations)
-        """)
         
-        st.markdown("<br>", unsafe_allow_html=True)
+        # Design Directives
         st.markdown("""
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #00d4ff; letter-spacing: 1.5px; margin-bottom: 8px;">
-            [ 02 // HUD DIRECTIVES ]
+        <div style="background: #F0C020; border: 3px solid #121212; box-shadow: 4px 4px 0px 0px #121212; padding: 14px 16px;">
+            <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: #121212; margin-bottom: 8px;">
+                GEOMETRIC RULES
+            </div>
+            <div style="font-size: 12px; font-weight: 600; line-height: 1.6; color: #121212;">
+                ■ No floating multi-columns<br>
+                ■ Direct keyword alignment<br>
+                ■ Plain text over fancy graphics<br>
+                ■ Metric quantification in bullets
+            </div>
         </div>
         """, unsafe_allow_html=True)
-        st.markdown("""
-        - `[+]` Standardize token headings
-        - `[+]` Inject high-density keywords
-        - `[+]` Quantify impact coefficients
-        - `[-]` Eliminate graphic artifacts
-        """)
 
 
 def render_section_card(section):
     """
-    Render a section analysis card in Cyberpunk HUD Chamfer format.
+    Render a section analysis card in Bauhaus constructivist format.
     
     Args:
         section (dict): Section analysis data containing:
@@ -449,26 +444,29 @@ def render_section_card(section):
     # Convert markdown bold (**text**) to HTML bold (<strong>text</strong>)
     recommendation_html = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', recommendation)
     
-    # Cyberpunk status configurations
+    # Bauhaus status configurations & geometric corner shapes
     if status == 'good':
-        badge_html = '<span class="status-badge badge-good">[✓ SYS_OPTIMAL]</span>'
+        badge_html = '<span class="status-badge badge-good">● ALIGNED</span>'
         card_class = "card-good"
-        code_tag = "SYS_OK"
+        shape_html = '<div class="circle-shape" style="width: 14px; height: 14px; background: #1040C0; border: 2px solid #121212;"></div>'
+        status_accent = "#1040C0"
     elif status == 'weak':
-        badge_html = '<span class="status-badge badge-weak">[⚠ SYS_WARN]</span>'
+        badge_html = '<span class="status-badge badge-weak">▲ NEEDS WORK</span>'
         card_class = "card-weak"
-        code_tag = "DEFICIT_DETECTED"
+        shape_html = '<div style="width: 14px; height: 14px; background: #F0C020; border: 2px solid #121212;"></div>'
+        status_accent = "#F0C020"
     else:  # missing
-        badge_html = '<span class="status-badge badge-missing">[✗ CRIT_DEFICIT]</span>'
+        badge_html = '<span class="status-badge badge-missing">■ DEFICIT</span>'
         card_class = "card-missing"
-        code_tag = "SECTOR_ABSENT"
+        shape_html = '<div style="width: 14px; height: 14px; background: #D02020; border: 2px solid #121212; transform: rotate(45deg);"></div>'
+        status_accent = "#D02020"
     
     st.markdown(f"""
     <div class="section-card {card_class}">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(42, 42, 58, 0.6); padding-bottom: 10px; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 1.2rem;">{icon}</span>
-                <span style="font-family: 'Orbitron', monospace; font-size: 1.15rem; font-weight: 700; color: #ffffff; letter-spacing: 1px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #121212; padding-bottom: 12px; margin-bottom: 14px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                {shape_html}
+                <span style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 900; color: #121212; text-transform: uppercase; letter-spacing: -0.5px;">
                     {title}
                 </span>
             </div>
@@ -476,7 +474,8 @@ def render_section_card(section):
         </div>
         <div class="diag-box">
             <div class="diag-title">
-                <span>&gt; DIAGNOSTIC // {code_tag}</span>
+                <span style="display: inline-block; width: 8px; height: 8px; background: {status_accent};"></span>
+                <span>ARCHITECTURAL AUDIT &amp; PRESCRIPTION</span>
             </div>
             <p class="diag-text">
                 {recommendation_html}
@@ -488,77 +487,93 @@ def render_section_card(section):
     # Show missing elements if any
     if missing and len(missing) > 0:
         st.markdown("""
-        <div style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #ff3366; letter-spacing: 1px; margin-top: 4px;">
-            [ CRITICAL DEFICIT LIST: ]
+        <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; color: #D02020; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; margin-bottom: 6px;">
+            SPECIFICATION DEFICITS DETECTED:
         </div>
         """, unsafe_allow_html=True)
         for item in missing[:5]:
             if item:
-                st.markdown(f"`[-]` <span style='font-family: \"Share Tech Mono\"; color: #e0e0e0;'>{item}</span>", unsafe_allow_html=True)
+                st.markdown(
+                    f"<div style='display: flex; align-items: center; gap: 8px; margin: 4px 0;'>"
+                    f"<span style='display: inline-block; width: 6px; height: 6px; background: #D02020;'></span>"
+                    f"<span style='font-family: \"Outfit\", sans-serif; font-weight: 600; color: #121212;'>{item}</span>"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
 
 
 def render_pro_tips():
-    """Render professional tips section in Cyberpunk terminal layout"""
+    """Render professional tips section in pure Bauhaus color-blocked composition"""
     st.markdown("""
-    <div style="margin-top: 25px;">
-        <h2 style="font-family: 'Orbitron', monospace; font-size: 1.6rem; color: #00d4ff; letter-spacing: 2px;">
-            ⚡ HUD PROTOCOLS: ATS BYPASS TACTICS
+    <div style="margin-top: 36px; margin-bottom: 20px; border-bottom: 4px solid #121212; padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div class="circle-shape" style="width: 18px; height: 18px; background: #D02020; border: 2px solid #121212;"></div>
+            <div style="width: 16px; height: 16px; background: #1040C0; border: 2px solid #121212;"></div>
+            <div style="width: 16px; height: 16px; background: #F0C020; border: 2px solid #121212;"></div>
+        </div>
+        <h2 style="font-size: 2.2rem; color: #121212; margin: 0; font-weight: 900; letter-spacing: -1px;">
+            BAUHAUS COMPLIANCE DIRECTIVES
         </h2>
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2, gap="large")
     
     with col1:
         st.markdown("""
-        <div style="background: #12121a; border: 1px solid #00ff88; padding: 16px; clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));">
-            <div style="font-family: 'Orbitron', monospace; color: #00ff88; font-size: 14px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;">
-                [+] SYSTEM OPTIMIZERS
+        <div style="background: #1040C0; color: #FFFFFF; border: 4px solid #121212; box-shadow: 8px 8px 0px 0px #121212; padding: 22px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; border-bottom: 2px solid #FFFFFF; padding-bottom: 8px;">
+                <div class="circle-shape" style="width: 16px; height: 16px; background: #F0C020; border: 2px solid #121212;"></div>
+                <div style="font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">
+                    FUNCTIONAL CONSTRUCTORS
+                </div>
             </div>
-            <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; line-height: 1.8; color: #e0e0e0;">
-                <div>&gt; DEPLOY ACTIVE VERBS [Engineered, Architected, Spearheaded]</div>
-                <div>&gt; INJECT METRIC COEFFICIENTS [%, latency, scale]</div>
-                <div>&gt; SYNCHRONIZE JD KEYWORDS EXACTLY</div>
-                <div>&gt; ENFORCE CLEAN PARSING SCHEMAS</div>
-                <div>&gt; UTILIZE CANONICAL SECTION LABELS</div>
+            <div style="font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 500; line-height: 1.8;">
+                <div>■ <strong>Deploy active verbs:</strong> Engineered, Architected, Spearheaded</div>
+                <div>■ <strong>Quantify performance:</strong> Percentages, latency, scale, dollar impact</div>
+                <div>■ <strong>Match vocabulary:</strong> Replicate exact keywords from the posting</div>
+                <div>■ <strong>Clean hierarchies:</strong> Standard H1-H3 sections with consistent rhythm</div>
+                <div>■ <strong>Standard fonts:</strong> Modern geometric or clean sans-serif typefaces</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
-        <div style="background: #12121a; border: 1px solid #ff3366; padding: 16px; clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));">
-            <div style="font-family: 'Orbitron', monospace; color: #ff3366; font-size: 14px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;">
-                [-] PARSER CORRUPTORS
+        <div style="background: #D02020; color: #FFFFFF; border: 4px solid #121212; box-shadow: 8px 8px 0px 0px #121212; padding: 22px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; border-bottom: 2px solid #FFFFFF; padding-bottom: 8px;">
+                <div style="width: 16px; height: 16px; background: #FFFFFF; border: 2px solid #121212; transform: rotate(45deg);"></div>
+                <div style="font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">
+                    SYNTACTIC DESTRUCTORS
+                </div>
             </div>
-            <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; line-height: 1.8; color: #e0e0e0;">
-                <div>&gt; AVOID MULTI-COLUMN COMPLEX LAYOUTS</div>
-                <div>&gt; PURGE HEADERS, FOOTERS &amp; FLOATING TEXT BOXES</div>
-                <div>&gt; FORBID EMBEDDED TABLES AND IMAGES</div>
-                <div>&gt; REJECT OBSOLETE NON-STANDARD FONTS</div>
-                <div>&gt; PREVENT SYNTACTIC NOISE &amp; OVERFLOW</div>
+            <div style="font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 500; line-height: 1.8;">
+                <div>■ <strong>Complex multi-columns:</strong> OCR readers tokenize lines horizontally</div>
+                <div>■ <strong>Decorative headers/footers:</strong> Data placed here is often ignored</div>
+                <div>■ <strong>Embedded graphics:</strong> Text inside images cannot be parsed</div>
+                <div>■ <strong>Tables for formatting:</strong> Creates irregular delimiter artifacts</div>
+                <div>■ <strong>Unstandardized titles:</strong> 'My Journey' instead of 'Experience'</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
     
     st.markdown("""
-    <div style="margin-top: 15px; border-left: 3px solid #00d4ff; padding: 8px 12px; background: rgba(0, 212, 255, 0.05); font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #00d4ff;">
-        // ALERT: Over 75% of submissions are rejected at the parsing boundary before human evaluation. Optimize precision.
+    <div style="margin-top: 24px; background: #F0C020; border: 4px solid #121212; box-shadow: 6px 6px 0px 0px #121212; padding: 14px 20px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 800; color: #121212; text-transform: uppercase; letter-spacing: 0.5px;">
+        ▲ EMPIRICAL FACT: Over 75% of submissions fail machine parsing prior to human review. Eliminate stylistic decoration to maximize parsing fidelity.
     </div>
     """, unsafe_allow_html=True)
 
 
 def render_score_card(score, label, delta=None):
     """
-    Render a cyberpunk score card with optional delta.
+    Render a Bauhaus constructivist score card.
     
     Args:
         score (float): The score to display
         label (str): Label for the score
         delta (float, optional): Delta value to show
     """
-    st.markdown(f'<div class="score-label">{label}</div>', unsafe_allow_html=True)
     if delta is not None:
-        st.metric("", f"{score:.1f}%", delta=f"+{delta:.1f}%")
+        st.metric(label, f"{score:.1f}%", delta=f"+{delta:.1f}%")
     else:
-        st.metric("", f"{score:.1f}%")
+        st.metric(label, f"{score:.1f}%")
